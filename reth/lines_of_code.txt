@@ -12,3 +12,8 @@ it and the commit to a part), so the split cannot be recomputed from the single-
   configuration, engine hooks, diagnostics, tests           5647
   switches that are off in the measured configuration       6742
   unassigned                                                  56
+
+  patch to evm2 (patches/evm2/0001)                          179
+  the five parts plus the evm2 patch                       13436
+
+The evm2 count is of the lines the patch adds to .rs files, without test files and without code under #[cfg(test)].
