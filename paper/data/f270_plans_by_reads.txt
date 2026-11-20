@@ -1,0 +1,10 @@
+# files: 27; blocks with all four rows: 2700; regular: 2519
+# groups by the block slot misses in the recorder process (f257_blockreads_blocks.csv slot_miss)
+all regular: 2519 blocks, misses 4-3001  H0 27.66 H3 24.03 H4 23.50 H5 28.07  H4/H0 0.850 (0.836-0.861)  H4/H3 0.978 (0.960-0.994)  H5/H0 1.015 (1.003-1.024)  G4-G3 newPayload -0.53 ms, execution -0.62, outside +0.09, process CPU +26.5
+quintile 1: 503 blocks, misses 4-280  H0 15.41 H3 14.09 H4 14.32 H5 15.93  H4/H0 0.929 (0.919-0.941)  H4/H3 1.016 (1.005-1.027)  H5/H0 1.034 (1.027-1.040)  G4-G3 newPayload +0.23 ms, execution +0.13, outside +0.10, process CPU +12.1
+quintile 2: 504 blocks, misses 280-388  H0 23.22 H3 20.00 H4 20.28 H5 24.11  H4/H0 0.873 (0.864-0.883)  H4/H3 1.014 (1.006-1.023)  H5/H0 1.038 (1.032-1.045)  G4-G3 newPayload +0.29 ms, execution +0.23, outside +0.06, process CPU +20.6
+quintile 3: 504 blocks, misses 388-499  H0 26.36 H3 22.62 H4 22.87 H5 27.34  H4/H0 0.868 (0.859-0.876)  H4/H3 1.011 (1.002-1.019)  H5/H0 1.037 (1.031-1.043)  G4-G3 newPayload +0.24 ms, execution +0.14, outside +0.11, process CPU +23.5
+quintile 4: 504 blocks, misses 500-695  H0 30.15 H3 25.44 H4 25.56 H5 30.89  H4/H0 0.848 (0.838-0.858)  H4/H3 1.004 (0.996-1.013)  H5/H0 1.024 (1.017-1.032)  G4-G3 newPayload +0.11 ms, execution -0.03, outside +0.15, process CPU +31.3
+quintile 5: 504 blocks, misses 696-3001  H0 43.11 H3 37.96 H4 34.43 H5 42.03  H4/H0 0.799 (0.761-0.832)  H4/H3 0.907 (0.858-0.950)  H5/H0 0.975 (0.943-1.002)  G4-G3 newPayload -3.53 ms, execution -3.58, outside +0.05, process CPU +44.8
+lightest 80%: 2015 blocks, misses 4-695  H0 23.79 H3 20.54 H4 20.76 H5 24.57  H4/H0 0.873 (0.868-0.878)  H4/H3 1.011 (1.006-1.015)  H5/H0 1.033 (1.029-1.037)  G4-G3 newPayload +0.22 ms, execution +0.12, outside +0.10, process CPU +21.9
+top 10%: 252 blocks, misses 894-3001  H0 50.16 H3 44.79 H4 38.19 H5 47.43  H4/H0 0.761 (0.703-0.815)  H4/H3 0.853 (0.782-0.919)  H5/H0 0.945 (0.893-0.989)  G4-G3 newPayload -6.60 ms, execution -6.63, outside +0.03, process CPU +52.9

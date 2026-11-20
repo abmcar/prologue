@@ -1,0 +1,87 @@
+% Figure: end-to-end time against the block's own storage work, block by block, on all 10,000 blocks of the main comparison
+% x: the block's storage-slot reads (hits from every source + misses), counted without prewarming and without reuse; log axis.
+% (a) the ratio of Prologue's newPayload (end-to-end) time to stock reth's (column pnup) for a random quarter of the blocks
+%     (data/f273_blockreads_quarter.csv: 2,500 blocks drawn per class with random.Random(273), scripts/blockreads_e273_points.py),
+%     log axis; regular blocks light grey dots, batch-mint blocks darker grey triangles (shape is the class, colour is kept
+%     for configurations); ratios outside 0.2-2.0 (6 below, 2 above among the sampled blocks) and the 31 sampled blocks with fewer than 250 slot reads are
+%     drawn at the edges. Over the points the trend of (b)'s Prologue / stock reth.
+% (b) ratios of summed newPayload times in sliding windows: the blocks sorted by slot reads, 1,000 blocks per window, moved by
+%     200 (46 windows); x = the window's median reads; bands = 95% intervals.
+%     PN/UP = Prologue / stock reth, PN/UR = Prologue / stock reth + reuse, UR/UP = stock reth + reuse / stock reth.
+% Data: data/f273_blockreads_blocks.csv and data/f273_blockreads_windows.csv with the summary data/f273_blockreads.txt, written
+% by scripts/blockreads_e273.py from the earlier results (run from the repository root; the printout rechecks every window).
+% Colour = the ratio's numerator (fig/eap_style.tex): blue = Prologue, orange dotted = stock reth + reuse; the two blue
+% lines differ by line style. All text 8.1 pt; one legend row above both panels.
+% Marks: 2,500 points; dots 0.65 pt at 40% opacity (so that the dense region keeps its gradation and triangles under it show), triangles 1.4 pt at 70%, triangles first and dots over them. With all
+% 10,000 blocks drawn the panel was too dense. (b): x from 400 to 5,300, the windows end at 3,924 reads.
+% Build: fig/eval_blockreads_standalone.tex with LuaLaTeX (needs the pgfplots library fillbetween).
+\pgfplotstableread[col sep=comma]{data/f273_blockreads_blocks.csv}\brBlk
+\pgfplotstableread[col sep=comma]{data/f273_blockreads_windows.csv}\brWin
+\pgfplotstableread[col sep=comma]{data/f273_blockreads_quarter.csv}\brPts
+% keep only the rows of one block class (#1 nomint or mint; \getthisrow, since \thisrow is a math function inside x expr)
+\pgfplotsset{br class/.style={x filter/.append code={%
+  \getthisrow{cls}\brClsA\edef\brClsB{#1}\ifx\brClsA\brClsB\else\def\pgfmathresult{nan}\fi}}}
+% a window series' 95% band: #1 colour, #2 opacity, #3 column
+\newcommand\brBand[3]{%
+  \addplot[name path=brlo, draw=none, forget plot] table[x=x_median, y=#3_lo] {\brWin};
+  \addplot[name path=brhi, draw=none, forget plot] table[x=x_median, y=#3_hi] {\brWin};
+  \addplot[#1, draw=none, fill opacity=#2, forget plot] fill between[of=brlo and brhi];}
+\tikzset{br line pnur/.style={cPlanS, line width=1.2pt, dash pattern=on 3.6pt off 1.8pt},
+  br reg/.style={circle, minimum size=2.2pt, inner sep=0pt, fill=black!32, draw=none},
+  br mint/.style={regular polygon, regular polygon sides=3, minimum size=4.6pt, inner sep=0pt, fill=black!62, draw=none}}
+\begin{tikzpicture}
+\begin{groupplot}[
+  group style={group size=2 by 1, horizontal sep=58pt},
+  eap axis, scale only axis, width=189pt, height=86pt,
+  xmode=log, xmin=240, xmax=8300, xtick={500,1000,2000,4000,8000}, xticklabels={500,{1,000},{2,000},{4,000},{8,000}}, minor xtick={},
+  xlabel={Storage-slot reads per block (log scale)},
+  ylabel style={align=center},
+]
+% ---------------- (a) every block ----------------
+% marks are drawn with their own plot (clip marker paths), so the trend stays on top of the points
+\nextgroupplot[title={(a) A random quarter of the blocks}, clip marker paths=true,
+  ymode=log, ymin=0.19, ymax=2.1, ytick={0.2,0.3,0.5,0.7,1,1.5,2}, yticklabels={0.2,0.3,0.5,0.7,1.0,1.5,2.0}, minor ytick={},
+  ylabel={End-to-end time ratio\\(\sys{} / stock reth)}]
+\draw[eap ref] (axis cs:240,1) -- (axis cs:8300,1);
+% batch-mint triangles first, regular dots over them, so that the regular blocks stay visible where the classes overlap
+\addplot[black!62, only marks, mark=triangle*, mark size=1.4pt, mark options={draw=none, fill=black!62, fill opacity=0.7}, br class=mint]
+  table[x expr={max(250,\thisrow{slot_reads})}, y expr={min(2,max(0.2,\thisrow{pnup}))}] {\brPts};
+\addplot[black!32, only marks, mark=*, mark size=0.65pt, mark options={draw=none, fill=black!38, fill opacity=0.4}, br class=nomint]
+  table[x expr={max(250,\thisrow{slot_reads})}, y expr={min(2,max(0.2,\thisrow{pnup}))}] {\brPts};
+% a white edge under the band and the line keeps them clear of the points
+\addplot[white, line width=2.8pt] table[x=x_median, y=PN/UP] {\brWin};
+\brBand{cPlan}{0.3}{PN/UP}
+\addplot[eap line plan] table[x=x_median, y=PN/UP] {\brWin};
+% ---------------- (b) trends ----------------
+\nextgroupplot[title={(b) Trends over sliding windows},
+  xmin=400, xmax=5300, xtick={500,1000,2000,4000}, xticklabels={500,{1,000},{2,000},{4,000}},
+  ymin=0.5, ymax=1.1, ytick={0.5,0.6,0.7,0.8,0.9,1.0,1.1}, yticklabels={0.5,0.6,0.7,0.8,0.9,1.0,1.1},
+  ylabel={End-to-end time ratio\\(sums over each window)}]
+\draw[eap ref] (axis cs:400,1) -- (axis cs:5300,1);
+\brBand{cReuse}{0.3}{UR/UP}
+\brBand{cPlan}{0.13}{PN/UR}
+\brBand{cPlan}{0.25}{PN/UP}
+\addplot[eap line reuse] table[x=x_median, y=UR/UP] {\brWin};
+\addplot[br line pnur] table[x=x_median, y=PN/UR] {\brWin};
+\addplot[eap line plan] table[x=x_median, y=PN/UP] {\brWin};
+% each line's value in the window with the most reads, right of its end (Prologue / stock reth + reuse above its end,
+% Prologue / stock reth below, as they are 0.04 apart)
+\pgfplotstablegetrowsof{\brWin}\pgfmathtruncatemacro\brLast{\pgfplotsretval-1}%
+\pgfplotstablegetelem{\brLast}{x_median}\of\brWin\pgfmathsetmacro\brXe{\pgfplotsretval*1.04}%
+\pgfplotstablegetelem{\brLast}{PN/UP}\of\brWin\edef\brVa{\pgfplotsretval}%
+\pgfplotstablegetelem{\brLast}{PN/UR}\of\brWin\edef\brVb{\pgfplotsretval}%
+\pgfplotstablegetelem{\brLast}{UR/UP}\of\brWin\edef\brVc{\pgfplotsretval}%
+\edef\brTmp{%
+  \noexpand\node[eap ratio, anchor=north west] at (axis cs:\brXe,\brVa) {\noexpand\pgfmathprintnumber[fixed, fixed zerofill, precision=2, assume math mode=true]{\brVa}\noexpand\eapx};
+  \noexpand\node[eap value, anchor=south west] at (axis cs:\brXe,\brVb) {\noexpand\pgfmathprintnumber[fixed, fixed zerofill, precision=2, assume math mode=true]{\brVb}\noexpand\eapx};
+  \noexpand\node[eap value, anchor=west] at (axis cs:\brXe,\brVc) {\noexpand\pgfmathprintnumber[fixed, fixed zerofill, precision=2, assume math mode=true]{\brVc}\noexpand\eapx};}%
+\brTmp
+\end{groupplot}
+% legend: one row centred above both panels; the band behind a line sample is its 95% interval
+\newcommand\brKeyLine[3]{\tikz[baseline=-0.55ex]{\fill[#1, opacity=#3] (0,-2.2pt) rectangle (16pt,2.2pt); \draw[#2] (0,0) -- (16pt,0);}}
+\node[eap legend, anchor=south] at ($(group c1r1.north west)!0.5!(group c2r1.north east) + (0,22pt)$)
+  {\eapKeyDot{br reg}\,Regular\hspace{8pt}\eapKeyDot{br mint}\,Batch-mint\hspace{8pt}%
+   \brKeyLine{cPlan}{eap line plan}{0.3}\,\sys{} / stock reth\hspace{8pt}%
+   \brKeyLine{cPlan}{br line pnur}{0.13}\,\sys{} / stock reth + reuse\hspace{8pt}%
+   \brKeyLine{cReuse}{eap line reuse}{0.3}\,Stock reth + reuse / stock reth};
+\end{tikzpicture}

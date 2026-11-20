@@ -1,0 +1,4 @@
+c2sweep.py on the added codes with CREATE2: codes 2366; errors 0; truncated 60; with records 95, records 494; processor time 0.45 h, median 0.00 s, max 27.0 s
+records of the base library codes: 4958 files, 275 with records
+records of the added codes: 2366 files, 95 with records
+raw/c2/c2rec_270: files 7324, content_sha256 9b0501ce617db4c997f880989eb6b7e67b2ab872de5706d88aabea286da23604

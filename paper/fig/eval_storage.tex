@@ -1,0 +1,65 @@
+% Data: scripts/fig_storage270.py -> data/f270_storage.csv;
+% check master/verify/verify_main257_master.txt). Segment 6, 1,000 blocks, one server; database on local NVMe, ESSD PL1 and
+% ESSD PL0 (1,200 GiB). Two panels with the same rows, one per volume (a dot plot on log axes: the values span a factor of
+% 20 and 130): (a) newPayload ms per block of stock reth without prewarming, stock reth and Prologue, with Prologue's ratio
+% to stock reth at the right; (b) disk reads per second of newPayload time, with the volume's reads per second at 32 reads
+% in flight (fio) as a black tick.
+% font (the log axis printed Times digits); markers from the shared configuration styles; rows 18.7 pt apart so that the
+% two-line row names fit at 8.1 pt; the volume's limit named beside its tick in (b) instead of in the legend; Prologue's
+% ratio to stock reth written left of its diamond, as the percentile ratios of the distribution figure (the column at the
+% right and its header did not fit beside the legend at 8.1 pt; the caption says what the ratio is), so (a) starts at 10 ms.
+% Build: fig/eval_storage_standalone.tex with LuaLaTeX.
+\pgfplotstableread[col sep=comma]{data/f270_storage.csv}\stTab
+% the three configurations' markers as pgfplots marks, sized as the shared marker styles
+\pgfplotsset{
+  st noPre/.style={mark=*, mark size=2.3pt, mark options={draw=cNoPreD, fill=cNoPreS, line width=0.5pt}},
+  st stock/.style={mark=square*, mark size=2.1pt, mark options={draw=cStockD, fill=cStockS, line width=0.5pt}},
+  st plan/.style={mark=diamond*, mark size=2.8pt, mark options={draw=cPlanD, fill=cPlanS, line width=0.5pt}},
+  st axis/.style={eap axis, scale only axis, width=160pt, height=56pt,
+    ymin=0.5, ymax=3.5, ytick={1,2,3}, yticklabels={{ESSD PL0\\\color{black!60}536\,\eapmu s},
+    {ESSD PL1\\\color{black!60}172\,\eapmu s}, {Local NVMe\\\color{black!60}77\,\eapmu s}},
+    yticklabel style={align=right, font=\fontsize{9}{9}\selectfont\sffamily}, ytick style={draw=none}}}
+% one row's range line: #1 table row, #2..#4 the three columns of the row
+\newcommand\stRange[4]{%
+  \pgfplotstablegetelem{#1}{y}\of\stTab\edef\stY{\pgfplotsretval}%
+  \pgfplotstablegetelem{#1}{#2}\of\stTab\edef\stA{\pgfplotsretval}%
+  \pgfplotstablegetelem{#1}{#4}\of\stTab\edef\stB{\pgfplotsretval}%
+  \edef\stTmp{\noexpand\draw[black!20, line width=1.4pt] (axis cs:\stA,\stY) -- (axis cs:\stB,\stY);}\stTmp}
+\begin{tikzpicture}
+\begin{axis}[st axis, name=stTop, xmode=log, xmin=10, xmax=1000, xtick={10,20,50,100,200,500,1000},
+  xticklabels={10,20,50,100,200,500,{1,000}}, minor xtick={},
+  xlabel={End-to-end time per block (ms)}, title={(a) End-to-end time}]
+\stRange{0}{np_pn}{np_up}{np_un}\stRange{1}{np_pn}{np_up}{np_un}\stRange{2}{np_pn}{np_up}{np_un}
+\addplot[only marks, st noPre] table[x=np_un, y=y]{\stTab};
+\addplot[only marks, st stock] table[x=np_up, y=y]{\stTab};
+\addplot[only marks, st plan] table[x=np_pn, y=y]{\stTab};
+% Prologue's time over stock reth's, left of Prologue's diamond
+\foreach \r in {0,1,2}{%
+  \pgfplotstablegetelem{\r}{y}\of\stTab\edef\stY{\pgfplotsretval}%
+  \pgfplotstablegetelem{\r}{np_pn}\of\stTab\edef\stX{\pgfplotsretval}%
+  \pgfplotstablegetelem{\r}{ratio}\of\stTab\edef\stR{\pgfplotsretval}%
+  \pgfmathsetmacro\stXl{\stX/1.09}%
+  \edef\stTmp{\noexpand\node[eap ratio, anchor=east, fill=white] at (axis cs:\stXl,\stY) {\noexpand\pgfmathprintnumber[fixed, precision=2, zerofill, assume math mode=true]{\stR}\noexpand\eapx};}\stTmp}
+\end{axis}
+\begin{axis}[st axis, at={(stTop.below south west)}, anchor=above north west, yshift=-10pt, xmode=log, xmin=1000, xmax=600000,
+  xtick={1000,10000,100000}, xticklabels={{1,000}, {10,000}, {100,000}}, minor xtick={2000,3000,4000,5000,6000,7000,8000,9000,20000,30000,40000,50000,60000,70000,80000,90000,200000,300000,400000,500000,600000},
+  xlabel={Disk reads per second of end-to-end time}, title={(b) Disk reads}]
+\stRange{0}{rd_un}{rd_up}{rd_pn}\stRange{1}{rd_un}{rd_up}{rd_pn}\stRange{2}{rd_un}{rd_up}{rd_pn}
+% the volume's reads per second with 32 reads in flight (fio)
+\foreach \r in {0,1,2}{%
+  \pgfplotstablegetelem{\r}{y}\of\stTab\edef\stY{\pgfplotsretval}%
+  \pgfplotstablegetelem{\r}{iops32}\of\stTab\edef\stI{\pgfplotsretval}%
+  \pgfmathsetmacro\stLo{\stY-0.3}\pgfmathsetmacro\stHi{\stY+0.3}%
+  \edef\stTmp{\noexpand\draw[black, line width=1.1pt] (axis cs:\stI,\stLo) -- (axis cs:\stI,\stHi);}\stTmp}
+% named once, beside the lowest row's tick (ESSD PL0, 10,168 reads per second; nothing lies right of it in that row)
+\pgfplotstablegetelem{2}{iops32}\of\stTab\edef\stI{\pgfplotsretval}%
+\edef\stTmp{\noexpand\node[eap value, anchor=west, xshift=2pt] at (axis cs:\stI,1) {volume's limit};}\stTmp
+\addplot[only marks, st noPre] table[x=rd_un, y=y]{\stTab};
+\addplot[only marks, st stock] table[x=rd_up, y=y]{\stTab};
+\addplot[only marks, st plan] table[x=rd_pn, y=y]{\stTab};
+\end{axis}
+% legend: one row above the plot
+\node[eap legend, anchor=south] at ($(stTop.north west)!0.5!(stTop.north east) + (0,19pt)$)
+  {\eapKeyDot{eap mark nopre}\,Without prewarming\eapKeySep\eapKeyDot{eap mark stock}\,Stock reth\eapKeySep
+   \eapKeyDot{eap mark plan}\,\sys};
+\end{tikzpicture}

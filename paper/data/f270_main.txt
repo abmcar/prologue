@@ -1,0 +1,38 @@
+main comparison: 10000 blocks under all four processes (regular 8950, batch-mint 1050, share 0.1050)
+all : UP newPayload 34.47 execution 31.01 ms/block (1.024 ms/Mgas), outside 3.47; UR newPayload 32.79 execution 28.52 ms/block (0.942 ms/Mgas), outside 4.27; UN newPayload 91.64 execution 88.41 ms/block (2.920 ms/Mgas), outside 3.23; PN newPayload 24.69 execution 19.76 ms/block (0.653 ms/Mgas), outside 4.93
+reg : UP newPayload 28.09 execution 24.75 ms/block (0.857 ms/Mgas), outside 3.34; UR newPayload 26.21 execution 22.14 ms/block (0.767 ms/Mgas), outside 4.08; UN newPayload 79.79 execution 76.58 ms/block (2.652 ms/Mgas), outside 3.21; PN newPayload 23.33 execution 18.64 ms/block (0.646 ms/Mgas), outside 4.69
+mint: UP newPayload 88.93 execution 84.35 ms/block (1.996 ms/Mgas), outside 4.58; UR newPayload 88.83 execution 82.91 ms/block (1.962 ms/Mgas), outside 5.92; UN newPayload 192.67 execution 189.22 ms/block (4.478 ms/Mgas), outside 3.45; PN newPayload 36.30 execution 29.30 ms/block (0.694 ms/Mgas), outside 6.99
+PN/UP: all newPayload 0.7162 execution 0.6373; reg newPayload 0.8306 execution 0.7533; mint newPayload 0.4082 execution 0.3474; slowest 5% (500 blocks, 366 batch-mint) 124.5 -> 53.6 ms, 0.4304; process cpu 1.1333
+  per segment newPayload PN/UP: 0.862 0.752 0.713 0.638 0.730 0.709 0.710 0.777 0.771 0.587; min 0.587 max 0.862
+  segments never used in development (1, 4, 5, 6, 7, 9): newPayload 0.7041 execution 0.6257 slowest 5% 0.4250
+PN/UR: all newPayload 0.7530 execution 0.6929; reg newPayload 0.8899 execution 0.8421; mint newPayload 0.4086 execution 0.3534; slowest 5% (500 blocks, 364 batch-mint) 124.5 -> 53.9 ms, 0.4326; process cpu 1.0443
+  per segment newPayload PN/UR: 0.942 0.798 0.750 0.665 0.767 0.742 0.747 0.839 0.813 0.593; min 0.593 max 0.942
+  segments never used in development (1, 4, 5, 6, 7, 9): newPayload 0.7373 execution 0.6761 slowest 5% 0.4225
+PN/UN: all newPayload 0.2694 execution 0.2235; reg newPayload 0.2924 execution 0.2434; mint newPayload 0.1884 execution 0.1549; slowest 5% (500 blocks, 371 batch-mint) 279.6 -> 55.4 ms, 0.1980; process cpu 1.6250
+  per segment newPayload PN/UN: 0.276 0.274 0.276 0.266 0.294 0.275 0.258 0.282 0.281 0.227; min 0.227 max 0.294
+  segments never used in development (1, 4, 5, 6, 7, 9): newPayload 0.2661 execution 0.2209 slowest 5% 0.1860
+UR/UP: all newPayload 0.9511 execution 0.9198; reg newPayload 0.9334 execution 0.8945; mint newPayload 0.9989 execution 0.9830; slowest 5% (500 blocks, 417 batch-mint) 128.2 -> 128.1 ms, 0.9998; process cpu 1.0852
+  per segment newPayload UR/UP: 0.915 0.943 0.951 0.959 0.952 0.956 0.951 0.926 0.948 0.989; min 0.915 max 0.989
+  segments never used in development (1, 4, 5, 6, 7, 9): newPayload 0.9549 execution 0.9255 slowest 5% 0.9998
+UP/UN: all newPayload 0.3762 execution 0.3507; reg newPayload 0.3520 execution 0.3232; mint newPayload 0.4616 execution 0.4458; slowest 5% (500 blocks, 421 batch-mint) 278.1 -> 119.4 ms, 0.4293; process cpu 1.4339
+  per segment newPayload UP/UN: 0.320 0.364 0.387 0.417 0.402 0.387 0.364 0.363 0.365 0.387; min 0.320 max 0.417
+  segments never used in development (1, 4, 5, 6, 7, 9): newPayload 0.3779 execution 0.3530 slowest 5% 0.3963
+process cpu ms/block: UP 361.8, UR 392.7, UN 252.3, PN 410.0
+table 2 all : newPayload ms/block UN 91.641 UP 34.474 UR 32.789 PN 24.690; execution ms/Mgas UN 2.9195 UP 1.0239 UR 0.9418 PN 0.6526; execution-thread run-queue wait ms/block UP 1.17 UR 1.48 UN 0.20 PN 0.03
+table 2 reg : newPayload ms/block UN 79.788 UP 28.085 UR 26.214 PN 23.328; execution ms/Mgas UN 2.6520 UP 0.8570 UR 0.7666 PN 0.6456; execution-thread run-queue wait ms/block UP 1.15 UR 1.46 UN 0.17 PN 0.03
+table 2 mint: newPayload ms/block UN 192.670 UP 88.927 UR 88.832 PN 36.300; execution ms/Mgas UN 4.4782 UP 1.9962 UR 1.9622 PN 0.6935; execution-thread run-queue wait ms/block UP 1.35 UR 1.64 UN 0.46 PN 0.04
+segments used in development (0, 2, 3, 8) PN/UP: newPayload 0.7352 execution 0.6556 slowest 5% 0.4408
+segments used in development (0, 2, 3, 8) PN/UR: newPayload 0.7778 execution 0.7198 slowest 5% 0.4329
+slowest 5% of the pair PN+UP: mean newPayload UP 124.50 PN 53.58; all blocks mean UP 34.47 PN 24.69; gap UP 3.612 PN 2.170
+np   p50: no prewarming 79.5 stock 25.9 reuse 23.6 Prologue 22.1 ms; Prologue/stock 0.855; Prologue/reuse 0.939; stock/Prologue 1.17
+np   p95: no prewarming 190.9 stock 95.3 reuse 95.7 Prologue 48.1 ms; Prologue/stock 0.505; Prologue/reuse 0.503; stock/Prologue 1.98
+np   p99: no prewarming 347.0 stock 147.3 reuse 146.2 Prologue 69.6 ms; Prologue/stock 0.472; Prologue/reuse 0.476; stock/Prologue 2.12
+exec p50: no prewarming 76.3 stock 22.6 reuse 19.6 Prologue 17.4 ms; Prologue/stock 0.770; Prologue/reuse 0.889; stock/Prologue 1.30
+exec p95: no prewarming 187.4 stock 90.9 reuse 89.6 Prologue 42.0 ms; Prologue/stock 0.462; Prologue/reuse 0.469; stock/Prologue 2.16
+exec p99: no prewarming 343.8 stock 142.0 reuse 138.1 Prologue 64.6 ms; Prologue/stock 0.455; Prologue/reuse 0.468; stock/Prologue 2.20
+block 26307110: UP 330.4, UR 361.2, UN 446.1, PN 65.3 ms newPayload
+block 26314402: UP 368.5, UR 350.6, UN 453.1, PN 69.0 ms newPayload
+newPayload: blocks longer under Prologue than under stock reth 1257 (12.6%), by more than 10% 301 (3.0%); over 100 ms stock 434 Prologue 18
+execution: blocks longer under Prologue than under stock reth 413 (4.1%), by more than 10% 86 (0.9%); over 100 ms stock 373 Prologue 14
+batch-mint blocks' share of UP execution time 0.286, newPayload 0.271
+batch-mint blocks' share of UR execution time 0.305, newPayload 0.284

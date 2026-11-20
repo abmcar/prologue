@@ -1,0 +1,51 @@
+cmp270: segment 6, 1000 blocks under all of ['UN', 'UP', 'PP', 'PN', 'UNc', 'UPc', 'PPc', 'PNc', 'UNh', 'UPh', 'PPh', 'PNh', 'UPf', 'PNf', 'URf'] (regular 893, batch-mint 107); stalled blocks (outside execution > 250 ms in any process) 0
+  UN: newPayload 98.23 ms, execution 95.05 ms per block; its own stalled blocks 0
+  UP: newPayload 35.17 ms, execution 31.77 ms per block; its own stalled blocks 0
+  PP: newPayload 31.71 ms, execution 26.86 ms per block; its own stalled blocks 0
+  PN: newPayload 24.94 ms, execution 20.09 ms per block; its own stalled blocks 0
+  UNc: newPayload 168.07 ms, execution 164.32 ms per block; its own stalled blocks 0
+  UPc: newPayload 53.28 ms, execution 48.82 ms per block; its own stalled blocks 0
+  PPc: newPayload 49.01 ms, execution 42.48 ms per block; its own stalled blocks 0
+  PNc: newPayload 33.18 ms, execution 26.83 ms per block; its own stalled blocks 0
+  UNh: newPayload 100.07 ms, execution 96.50 ms per block; its own stalled blocks 0
+  UPh: newPayload 39.24 ms, execution 35.11 ms per block; its own stalled blocks 0
+  PPh: newPayload 36.35 ms, execution 30.35 ms per block; its own stalled blocks 0
+  PNh: newPayload 31.09 ms, execution 24.98 ms per block; its own stalled blocks 0
+  UPf: newPayload 34.72 ms, execution 31.24 ms per block; its own stalled blocks 0
+  PNf: newPayload 24.67 ms, execution 19.80 ms per block; its own stalled blocks 0
+  URf: newPayload 33.04 ms, execution 28.77 ms per block; its own stalled blocks 0
+[ratio] PN/UP (all): newPayload 0.709 (0.669-0.747); execution 0.632 (0.592-0.672); slowest 5% 0.353 (0.294-0.431); regular 0.850 (0.835-0.866); batch-mint 0.393 (0.344-0.451)
+[ratio] PN/PP (all): newPayload 0.787 (0.736-0.835); execution 0.748 (0.693-0.804); slowest 5% 0.362 (0.302-0.443); regular 0.963 (0.943-0.982); batch-mint 0.417 (0.362-0.485)
+[ratio] PP/UP (all): newPayload 0.902 (0.890-0.913); execution 0.845 (0.830-0.859); slowest 5% 0.966 (0.925-0.990); regular 0.883 (0.876-0.892); batch-mint 0.942 (0.913-0.964)
+[ratio] UP/UN (all): newPayload 0.358 (0.342-0.376); execution 0.334 (0.318-0.353); slowest 5% 0.386 (0.308-0.476); regular 0.335 (0.330-0.341); batch-mint 0.421 (0.365-0.488)
+[ratio] PNc/UPc (all): newPayload 0.623 (0.575-0.670); execution 0.550 (0.502-0.597); slowest 5% 0.310 (0.252-0.386); regular 0.809 (0.782-0.837); batch-mint 0.337 (0.290-0.393)
+[ratio] PNc/PPc (all): newPayload 0.677 (0.621-0.733); execution 0.632 (0.569-0.694); slowest 5% 0.322 (0.260-0.404); regular 0.892 (0.862-0.922); batch-mint 0.359 (0.305-0.422)
+[ratio] PPc/UPc (all): newPayload 0.920 (0.909-0.930); execution 0.870 (0.856-0.884); slowest 5% 0.962 (0.936-0.980); regular 0.907 (0.897-0.917); batch-mint 0.940 (0.919-0.957)
+[ratio] UPc/UNc (all): newPayload 0.317 (0.298-0.339); execution 0.297 (0.278-0.320); slowest 5% 0.385 (0.307-0.479); regular 0.273 (0.266-0.281); batch-mint 0.420 (0.361-0.490)
+[ratio] PNh/UPh (all): newPayload 0.792 (0.753-0.829); execution 0.711 (0.671-0.750); slowest 5% 0.440 (0.375-0.525); regular 0.924 (0.908-0.940); batch-mint 0.480 (0.426-0.543)
+[ratio] PNh/PPh (all): newPayload 0.855 (0.810-0.899); execution 0.823 (0.769-0.875); slowest 5% 0.457 (0.386-0.553); regular 1.008 (0.990-1.024); batch-mint 0.506 (0.444-0.580)
+[ratio] UPh/UNh (all): newPayload 0.392 (0.377-0.410); execution 0.364 (0.348-0.382); slowest 5% 0.401 (0.328-0.487); regular 0.373 (0.367-0.378); batch-mint 0.447 (0.391-0.513)
+[ratio] PNf/UPf (all): newPayload 0.710 (0.672-0.747); execution 0.634 (0.595-0.671); slowest 5% 0.375 (0.315-0.452); regular 0.840 (0.825-0.855); batch-mint 0.407 (0.359-0.465)
+[ratio] PNf/URf (all): newPayload 0.747 (0.705-0.788); execution 0.688 (0.643-0.733); slowest 5% 0.378 (0.320-0.454); regular 0.901 (0.882-0.920); batch-mint 0.408 (0.360-0.465)
+[diff] (PNc/UPc) - (PN/UP) (all): -0.086 (-0.096 to -0.075) -> wholly below 0
+[diff] (PNc/PPc) - (PN/PP) (all): -0.110 (-0.119 to -0.099) -> wholly below 0
+[diff] (PNh/UPh) - (PN/UP) (all): +0.083 (+0.077 to +0.089) -> wholly above 0
+[diff] (PN/UP) - (PNf/UPf) (all): -0.001 (-0.006 to +0.003) -> not resolved
+[fio] results/fio270_prologue-sd_local.txt: qd1: iops 12655, mean latency 77.1 us, p99 88.6 us, bw 49 MiB/s | qd32: iops 322882, mean latency 97.2 us, p99 185.3 us, bw 1261 MiB/s
+[fio] results/fio270_prologue-sd_pl1.txt: qd1: iops 5750, mean latency 171.6 us, p99 259.1 us, bw 22 MiB/s | qd32: iops 50834, mean latency 627.6 us, p99 6783.0 us, bw 199 MiB/s
+[dev] UN: 1620 reads per block, 16488 per s, 0.080 ms per read, reads in flight while busy 1.9 (approximate)
+[dev] UP: 1621 reads per block, 46083 per s, 0.087 ms per read, reads in flight while busy 6.0 (approximate)
+[dev] PN: 1633 reads per block, 65477 per s, 0.086 ms per read, reads in flight while busy 7.4 (approximate)
+[dev] UNc: 1620 reads per block, 9637 per s, 0.187 ms per read, reads in flight while busy 2.1 (approximate)
+[dev] UPc: 1621 reads per block, 30416 per s, 0.231 ms per read, reads in flight while busy 7.1 (approximate)
+[dev] PNc: 1634 reads per block, 49255 per s, 0.241 ms per read, reads in flight while busy 10.9 (approximate)
+[rec] R: ms per block slot, account, code waits, execution; storage-wait share; ms per device read (position >= 2)
+  H0n : 43.82 15.02 2.08 84.59; share 0.720; 0.080 ms per read (900 blocks)
+  H0  : 10.65 1.78 0.42 33.17; share 0.388; 0.087 ms per read (900 blocks)
+  H3  : 12.47 1.58 0.48 27.26; share 0.533; 0.085 ms per read (900 blocks)
+  H4  : 6.23 0.83 0.49 20.79; share 0.363; 0.086 ms per read (900 blocks)
+[rec] Rc: ms per block slot, account, code waits, execution; storage-wait share; ms per device read (position >= 2)
+  H0n : 91.61 31.52 4.14 150.63; share 0.845; 0.183 ms per read (900 blocks)
+  H0  : 24.16 4.05 0.88 48.81; share 0.596; 0.226 ms per read (900 blocks)
+  H3  : 26.05 3.41 0.99 42.28; share 0.720; 0.205 ms per read (900 blocks)
+  H4  : 12.45 1.91 1.03 27.60; share 0.558; 0.236 ms per read (900 blocks)

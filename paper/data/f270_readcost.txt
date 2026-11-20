@@ -1,0 +1,147 @@
+# readcost_e257.py e270 (port of an earlier experiment readcost247.py): rows ['H0n', 'H0', 'H3', 'H4', 'H5']; counted blocks (role measured, position >= 2); per block means; fast/slow split at 30 us
+
+== H0n: 2700 blocks, 30.35 Mgas per block; execution 69.914 ms, newPayload 74.346 ms
+  acct: reads 690.5, hits 573.1 (pre-execution 0.0, plan readers 0.0, before 573.1), misses 117.43; hit rate 0.8299; per hit 0.36 us, per miss 111.4 us; read time 13.292 ms
+  slot: reads 2104.3, hits 1558.1 (pre-execution 0.0, plan readers 0.0, before 1558.1), misses 546.19; hit rate 0.7404; per hit 0.38 us, per miss 56.9 us; read time 31.662 ms
+  code: reads 343.4, hits 306.3 (pre-execution 0.0, plan readers 0.0, before 306.3), misses 37.09; hit rate 0.8920; per hit 0.49 us, per miss 53.5 us; read time 2.136 ms
+    slot_wait:    0.00 per block, 0.000 ms; per read mean    0.0 us, median    0.0, nine-tenths    0.0
+    slot_fast:  247.30 per block, 0.762 ms; per read mean    3.1 us, median    2.6, nine-tenths    5.7
+    slot_slow:  298.89 per block, 29.866 ms; per read mean   99.9 us, median   85.7, nine-tenths  157.9
+    acct_fast:    9.18 per block, 0.036 ms; per read mean    3.9 us, median    3.8, nine-tenths    5.2
+    acct_slow:  108.25 per block, 12.968 ms; per read mean  119.8 us, median   96.0, nine-tenths  176.2
+    code_fast:   28.62 per block, 0.260 ms; per read mean    9.1 us, median    8.7, nine-tenths   14.5
+    code_slow:    8.47 per block, 1.705 ms; per read mean  201.3 us, median  236.1, nine-tenths  289.4
+    check of the threshold: engine major faults per block = 1.24 x slow misses + 8.6 (correlation 0.988; slow misses 415.6, faults 524.6 per block)
+  faults per block: execution thread major 524.6, minor 314.7; process major 1333.4, minor 1156.9; other threads major 808.7; disk reads 5.467 MB per block
+  filter answered absent accounts 0.00 of 0.0 lookups per block; code backup cache hits 0.00 per block
+
+== H0: 2700 blocks, 30.35 Mgas per block; execution 28.322 ms, newPayload 32.499 ms
+  acct: reads 690.5, hits 679.6 (pre-execution 105.9, plan readers 0.0, before 573.7), misses 10.90; hit rate 0.9842; per hit 0.33 us, per miss 112.4 us; read time 1.446 ms
+  slot: reads 2104.3, hits 1986.9 (pre-execution 417.0, plan readers 0.0, before 1569.9), misses 117.35; hit rate 0.9442; per hit 0.35 us, per miss 56.6 us; read time 7.340 ms
+  code: reads 343.4, hits 335.6 (pre-execution 30.3, plan readers 0.0, before 305.3), misses 7.83; hit rate 0.9772; per hit 0.37 us, per miss 50.8 us; read time 0.523 ms
+    slot_wait:   17.41 per block, 1.970 ms; per read mean  113.1 us, median   86.4, nine-tenths  168.6
+    slot_fast:   59.89 per block, 0.230 ms; per read mean    3.8 us, median    3.1, nine-tenths    7.2
+    slot_slow:   40.05 per block, 4.332 ms; per read mean  108.2 us, median   87.2, nine-tenths  165.3
+    acct_fast:    1.75 per block, 0.009 ms; per read mean    5.1 us, median    4.5, nine-tenths    7.9
+    acct_slow:    9.14 per block, 1.208 ms; per read mean  132.1 us, median   98.6, nine-tenths  183.1
+    code_fast:    5.97 per block, 0.062 ms; per read mean   10.4 us, median   10.0, nine-tenths   17.3
+    code_slow:    1.86 per block, 0.330 ms; per read mean  176.9 us, median  158.4, nine-tenths  336.0
+    check of the threshold: engine major faults per block = 1.50 x slow misses + -6.9 (correlation 0.986; slow misses 51.1, faults 69.8 per block)
+  faults per block: execution thread major 69.8, minor 137.0; process major 1359.4, minor 1393.1; other threads major 1289.6; disk reads 5.477 MB per block
+  filter answered absent accounts 0.00 of 0.0 lookups per block; code backup cache hits 0.00 per block
+
+== H3: 2700 blocks, 30.35 Mgas per block; execution 22.462 ms, newPayload 27.824 ms
+  acct: reads 373.6, hits 360.7 (pre-execution 39.0, plan readers 0.0, before 321.7), misses 12.96; hit rate 0.9653; per hit 0.28 us, per miss 87.3 us; read time 1.231 ms
+  slot: reads 1511.1, hits 1378.7 (pre-execution 241.3, plan readers 0.0, before 1137.4), misses 132.45; hit rate 0.9124; per hit 0.30 us, per miss 62.7 us; read time 8.710 ms
+  code: reads 161.6, hits 154.9 (pre-execution 12.0, plan readers 0.0, before 142.9), misses 6.66; hit rate 0.9588; per hit 0.35 us, per miss 74.1 us; read time 0.548 ms
+    slot_wait:   47.30 per block, 4.300 ms; per read mean   90.9 us, median   83.1, nine-tenths  159.7
+    slot_fast:   51.83 per block, 0.171 ms; per read mean    3.3 us, median    2.7, nine-tenths    5.7
+    slot_slow:   33.32 per block, 3.725 ms; per read mean  111.8 us, median   90.2, nine-tenths  172.9
+    acct_fast:    3.51 per block, 0.015 ms; per read mean    4.1 us, median    2.8, nine-tenths    7.7
+    acct_slow:    9.45 per block, 1.108 ms; per read mean  117.2 us, median   93.2, nine-tenths  172.3
+    code_fast:    4.64 per block, 0.004 ms; per read mean    1.0 us, median    0.7, nine-tenths    1.2
+    code_slow:    2.02 per block, 0.485 ms; per read mean  240.4 us, median  259.3, nine-tenths  334.0
+    check of the threshold: engine major faults per block = 1.37 x slow misses + -1.4 (correlation 0.982; slow misses 44.8, faults 60.0 per block)
+  faults per block: execution thread major 60.0, minor 106.3; process major 1345.7, minor 1431.2; other threads major 1285.7; disk reads 5.470 MB per block
+  filter answered absent accounts 27.60 of 129.0 lookups per block; code backup cache hits 0.00 per block
+
+== H4: 2700 blocks, 30.35 Mgas per block; execution 19.763 ms, newPayload 25.244 ms
+  acct: reads 377.8, hits 368.2 (pre-execution 15.5, plan readers 26.7, before 326.1), misses 9.57; hit rate 0.9747; per hit 0.27 us, per miss 83.4 us; read time 0.899 ms
+  slot: reads 1515.1, hits 1418.9 (pre-execution 173.0, plan readers 94.9, before 1151.0), misses 96.21; hit rate 0.9365; per hit 0.30 us, per miss 57.2 us; read time 5.924 ms
+  code: reads 171.5, hits 164.8 (pre-execution 10.2, plan readers 2.4, before 152.1), misses 6.73; hit rate 0.9608; per hit 0.35 us, per miss 65.5 us; read time 0.498 ms
+    slot_wait:   16.21 per block, 1.539 ms; per read mean   95.0 us, median   78.3, nine-tenths  176.4
+    slot_fast:   47.87 per block, 0.188 ms; per read mean    3.9 us, median    3.1, nine-tenths    7.3
+    slot_slow:   32.12 per block, 3.686 ms; per read mean  114.7 us, median   91.5, nine-tenths  176.7
+    acct_fast:    3.14 per block, 0.013 ms; per read mean    4.0 us, median    2.8, nine-tenths    7.4
+    acct_slow:    6.42 per block, 0.779 ms; per read mean  121.3 us, median   97.7, nine-tenths  177.3
+    code_fast:    4.94 per block, 0.005 ms; per read mean    0.9 us, median    0.7, nine-tenths    1.2
+    code_slow:    1.79 per block, 0.432 ms; per read mean  241.5 us, median  260.9, nine-tenths  335.4
+    check of the threshold: engine major faults per block = 1.40 x slow misses + -3.5 (correlation 0.973; slow misses 40.3, faults 53.0 per block)
+  faults per block: execution thread major 53.0, minor 98.5; process major 1367.6, minor 2102.3; other threads major 1314.6; disk reads 5.573 MB per block
+  filter answered absent accounts 28.82 of 131.3 lookups per block; code backup cache hits 35.05 per block
+
+== H5: 2700 blocks, 30.35 Mgas per block; execution 26.421 ms, newPayload 30.689 ms
+  acct: reads 690.5, hits 682.0 (pre-execution 68.0, plan readers 40.2, before 573.8), misses 8.55; hit rate 0.9876; per hit 0.32 us, per miss 115.3 us; read time 1.202 ms
+  slot: reads 2104.3, hits 2013.8 (pre-execution 309.9, plan readers 133.8, before 1570.2), misses 90.43; hit rate 0.9570; per hit 0.35 us, per miss 56.3 us; read time 5.794 ms
+  code: reads 343.4, hits 335.2 (pre-execution 26.0, plan readers 3.8, before 305.3), misses 8.20; hit rate 0.9761; per hit 0.38 us, per miss 51.9 us; read time 0.553 ms
+    slot_wait:    9.38 per block, 1.382 ms; per read mean  147.3 us, median   85.7, nine-tenths  272.4
+    slot_fast:   54.98 per block, 0.243 ms; per read mean    4.4 us, median    3.4, nine-tenths    8.7
+    slot_slow:   26.06 per block, 3.363 ms; per read mean  129.0 us, median   94.7, nine-tenths  191.6
+    acct_fast:    1.81 per block, 0.010 ms; per read mean    5.6 us, median    4.6, nine-tenths    8.7
+    acct_slow:    6.73 per block, 0.970 ms; per read mean  144.0 us, median  106.0, nine-tenths  199.3
+    code_fast:    6.32 per block, 0.067 ms; per read mean   10.5 us, median   10.2, nine-tenths   17.5
+    code_slow:    1.87 per block, 0.352 ms; per read mean  187.9 us, median  161.4, nine-tenths  347.3
+    check of the threshold: engine major faults per block = 1.60 x slow misses + -11.5 (correlation 0.964; slow misses 34.7, faults 43.8 per block)
+  faults per block: execution thread major 43.8, minor 122.8; process major 1380.1, minor 2391.8; other threads major 1336.2; disk reads 5.604 MB per block
+  filter answered absent accounts 0.00 of 0.0 lookups per block; code backup cache hits 0.00 per block
+
+== H0 -> H4: read time shorter by 1.988 ms per block (execution 8.559 ms; the rest, 6.571 ms, is not reading)
+  acct: fewer reads +0.655, hit rate -0.404, per-miss time +0.277, per-hit time +0.019; sum +0.547 = +0.547
+  slot: fewer reads +2.055, hit rate -0.659, per-miss time -0.055 (outcome mix -0.137, outcome times +0.079), per-hit time +0.075; sum +1.416 = +1.416
+  code: fewer reads +0.262, hit rate -0.142, per-miss time -0.099, per-hit time +0.004; sum +0.025 = +0.025
+  all kinds: fewer reads +2.972, hit rate -1.205, per-miss time +0.124, per-hit time +0.098; sum +1.988
+  misses only (all kinds): fewer reads +2.614, hit rate -1.212, per-miss time +0.124; sum +1.527
+
+== H0n -> H0: read time shorter by 37.781 ms per block (execution 41.592 ms; the rest, 3.811 ms, is not reading)
+  acct: fewer reads +0.000, hit rate +11.830, per-miss time -0.010, per-hit time +0.026; sum +11.846 = +11.846
+  slot: fewer reads +0.000, hit rate +24.228, per-miss time +0.030 (outcome mix +2.394, outcome times -2.345), per-hit time +0.065; sum +24.322 = +24.322
+  code: fewer reads +0.000, hit rate +1.552, per-miss time +0.021, per-hit time +0.040; sum +1.613 = +1.613
+  all kinds: fewer reads +0.000, hit rate +37.610, per-miss time +0.041, per-hit time +0.131; sum +37.781
+  misses only (all kinds): fewer reads +0.000, hit rate +37.827, per-miss time +0.041; sum +37.868
+
+== H0 -> H3: read time shorter by -1.181 ms per block (execution 5.860 ms; the rest, 7.041 ms, is not reading)
+  acct: fewer reads +0.663, hit rate -0.791, per-miss time +0.325, per-hit time +0.017; sum +0.214 = +0.214
+  slot: fewer reads +2.069, hit rate -2.711, per-miss time -0.802 (outcome mix -1.782, outcome times +0.957), per-hit time +0.074; sum -1.371 = -1.371
+  code: fewer reads +0.277, hit rate -0.150, per-miss time -0.155, per-hit time +0.004; sum -0.025 = -0.025
+  all kinds: fewer reads +3.009, hit rate -3.652, per-miss time -0.632, per-hit time +0.094; sum -1.181
+  misses only (all kinds): fewer reads +2.646, hit rate -3.673, per-miss time -0.632; sum -1.659
+
+== H3 -> H4: read time shorter by 3.169 ms per block (execution 2.699 ms; the rest, -0.470 ms, is not reading)
+  acct: fewer reads -0.014, hit rate +0.307, per-miss time +0.037, per-hit time +0.002; sum +0.332 = +0.332
+  slot: fewer reads -0.023, hit rate +2.283, per-miss time +0.528 (outcome mix +0.730, outcome times -0.189), per-hit time -0.001; sum +2.787 = +2.787
+  code: fewer reads -0.034, hit rate +0.025, per-miss time +0.058, per-hit time +0.000; sum +0.050 = +0.050
+  all kinds: fewer reads -0.070, hit rate +2.615, per-miss time +0.623, per-hit time +0.001; sum +3.169
+  misses only (all kinds): fewer reads -0.065, hit rate +2.627, per-miss time +0.623; sum +3.186
+
+== H0 -> H5: read time shorter by 1.759 ms per block (execution 1.901 ms; the rest, 0.142 ms, is not reading)
+  acct: fewer reads +0.000, hit rate +0.263, per-miss time -0.026, per-hit time +0.006; sum +0.244 = +0.244
+  slot: fewer reads +0.000, hit rate +1.515, per-miss time +0.033 (outcome mix +0.942, outcome times -0.897), per-hit time -0.002; sum +1.546 = +1.546
+  code: fewer reads +0.000, hit rate -0.018, per-miss time -0.009, per-hit time -0.003; sum -0.030 = -0.030
+  all kinds: fewer reads +0.000, hit rate +1.760, per-miss time -0.002, per-hit time +0.001; sum +1.759
+  misses only (all kinds): fewer reads +0.000, hit rate +1.770, per-miss time -0.002; sum +1.769
+
+== H5 -> H4: read time shorter by 0.229 ms per block (execution 6.658 ms; the rest, 6.430 ms, is not reading)
+  acct: fewer reads +0.544, hit rate -0.563, per-miss time +0.306, per-hit time +0.016; sum +0.303 = +0.303
+  slot: fewer reads +1.622, hit rate -1.739, per-miss time -0.089 (outcome mix -1.438, outcome times +1.332), per-hit time +0.076; sum -0.129 = -0.129
+  code: fewer reads +0.277, hit rate -0.136, per-miss time -0.092, per-hit time +0.005; sum +0.055 = +0.055
+  all kinds: fewer reads +2.443, hit rate -2.437, per-miss time +0.125, per-hit time +0.098; sum +0.229
+  misses only (all kinds): fewer reads +2.084, hit rate -2.451, per-miss time +0.125; sum -0.242
+
+== checks: diag records (miss2; other kinds 0 and 2) against the blocks files, per block over the counted blocks
+  H0n: 2700 diag records for 2700 counted blocks (without a record 0, repeated 0)
+    slot misses: diag 546.194, slot_miss 546.194, d_slot_miss 546.194 (blocks that differ from diag: 0 and 0); time ms: diag 30.629, slot_miss_ms 31.067, d_slot_miss_ms 30.629; by outcome 546.194 misses, 30.629 ms
+    account misses: diag 117.429, acct_miss 117.429 (blocks that differ 0); code misses: diag 37.086, code_miss 37.086 (blocks that differ 0)
+  H0: 2700 diag records for 2700 counted blocks (without a record 0, repeated 0)
+    slot misses: diag 117.355, slot_miss 117.355, d_slot_miss 117.355 (blocks that differ from diag: 0 and 0); time ms: diag 6.532, slot_miss_ms 6.645, d_slot_miss_ms 6.532; by outcome 117.355 misses, 6.532 ms
+    account misses: diag 10.897, acct_miss 10.897 (blocks that differ 0); code misses: diag 7.833, code_miss 7.833 (blocks that differ 0)
+  H3: 2700 diag records for 2700 counted blocks (without a record 0, repeated 0)
+    slot misses: diag 132.452, slot_miss 132.452, d_slot_miss 132.452 (blocks that differ from diag: 0 and 0); time ms: diag 8.197, slot_miss_ms 8.303, d_slot_miss_ms 8.197; by outcome 132.452 misses, 8.197 ms
+    account misses: diag 12.957, acct_miss 12.957 (blocks that differ 0); code misses: diag 6.661, code_miss 6.661 (blocks that differ 0)
+  H4: 2700 diag records for 2700 counted blocks (without a record 0, repeated 0)
+    slot misses: diag 96.206, slot_miss 96.206, d_slot_miss 96.206 (blocks that differ from diag: 0 and 0); time ms: diag 5.413, slot_miss_ms 5.503, d_slot_miss_ms 5.413; by outcome 96.206 misses, 5.413 ms
+    account misses: diag 9.568, acct_miss 9.568 (blocks that differ 0); code misses: diag 6.731, code_miss 6.731 (blocks that differ 0)
+  H5: 2700 diag records for 2700 counted blocks (without a record 0, repeated 0)
+    slot misses: diag 90.427, slot_miss 90.427, d_slot_miss 90.427 (blocks that differ from diag: 0 and 0); time ms: diag 4.988, slot_miss_ms 5.088, d_slot_miss_ms 4.988; by outcome 90.427 misses, 4.988 ms
+    account misses: diag 8.548, acct_miss 8.548 (blocks that differ 0); code misses: diag 8.198, code_miss 8.198 (blocks that differ 0)
+
+== Table 3 (sec/7_eval.tex, tab:readcost), per block over the counted blocks. Storage wait = d_slot_miss_ms + acct_miss_ms + code_miss_ms (final252.py, final257.py); in brackets with slot_miss_ms instead (ana257.py), and the sum of the seven outcomes in the diag records
+  H0n: slot reads 2104.3; hit rate 0.7404; misses in memory 247.30, from disk 298.89, in flight 0.00; major faults: execution thread 524.6, all threads 1333.4; disk reads 5.467 MB; storage wait 45.697 ms (46.135; 45.597); execution 69.914 ms
+      mean per read (us): hit 0.38, miss in memory 3.1, from disk 99.9, in flight -; values from plan readers that the execution thread read (account + slot + code hits) 0.0
+  H0: slot reads 2104.3; hit rate 0.9442; misses in memory 59.89, from disk 40.05, in flight 17.41; major faults: execution thread 69.8, all threads 1359.4; disk reads 5.477 MB; storage wait 8.154 ms (8.268; 8.140); execution 28.322 ms
+      mean per read (us): hit 0.35, miss in memory 3.8, from disk 108.2, in flight 113.1; values from plan readers that the execution thread read (account + slot + code hits) 0.0
+  H3: slot reads 1511.1; hit rate 0.9124; misses in memory 51.83, from disk 33.32, in flight 47.30; major faults: execution thread 60.0, all threads 1345.7; disk reads 5.470 MB; storage wait 9.821 ms (9.927; 9.808); execution 22.462 ms
+      mean per read (us): hit 0.30, miss in memory 3.3, from disk 111.8, in flight 90.9; values from plan readers that the execution thread read (account + slot + code hits) 0.0
+  H4: slot reads 1515.1; hit rate 0.9365; misses in memory 47.87, from disk 32.12, in flight 16.21; major faults: execution thread 53.0, all threads 1367.6; disk reads 5.573 MB; storage wait 6.651 ms (6.741; 6.640); execution 19.763 ms
+      mean per read (us): hit 0.30, miss in memory 3.9, from disk 114.7, in flight 95.0; values from plan readers that the execution thread read (account + slot + code hits) 124.0
+  H5: slot reads 2104.3; hit rate 0.9570; misses in memory 54.98, from disk 26.06, in flight 9.38; major faults: execution thread 43.8, all threads 1380.1; disk reads 5.604 MB; storage wait 6.399 ms (6.499; 6.387); execution 26.421 ms
+      mean per read (us): hit 0.35, miss in memory 4.4, from disk 129.0, in flight 147.3; values from plan readers that the execution thread read (account + slot + code hits) 177.8

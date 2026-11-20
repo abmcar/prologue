@@ -1,0 +1,53 @@
+% when the call starts; the key of D needs the value that C reads. (a) Prewarming issues each read when its thread
+% reaches it, so B and C stay bound but unissued while the reads before them are on disk. (b) Prologue issues A, B and C
+% at the call's start. Schematic, no data. Style: fig/eap_style.tex.
+\begin{tikzpicture}[x=1pt, y=1pt, font=\eapfont,
+  lab/.style={inner sep=0pt, text=black!90},
+  ttl/.style={inner sep=0pt, font=\eapfont\bfseries},
+  idle/.style={fill=cStockL, draw=cStockM, line width=0.4pt, postaction={pattern=north east lines, pattern color=cStockM}},
+  rdS/.style={fill=cStockS, draw=cStockD, line width=0.6pt},
+  rdP/.style={fill=cPlanS, draw=cPlanD, line width=0.6pt},
+  bind/.style={diamond, aspect=1, minimum size=7.4pt, inner sep=0pt, fill=black!88, draw=white, line width=0.7pt},
+]
+\def\h{4.6}
+\useasboundingbox (0,-166) rectangle (241,3);
+\newcommand\row[2]{\node[lab, anchor=east] at (13,#2) {#1};}
+\newcommand\seg[4]{\draw[#1] (#2,#4-\h) rectangle (#3,#4+\h);}
+% call start
+\draw[black!55, line width=0.5pt, densely dashed] (22,-12) -- (22,-146);
+\node[lab, anchor=south west] at (0,-10) {call starts};
+% ---------------- (a) prewarming ----------------
+\node[ttl, anchor=west] at (80,-22) {(a) Prewarming};
+\row{A}{-22}\row{B}{-36}\row{C}{-50}\row{D}{-64}
+\seg{rdS}{22}{66}{-22}
+\seg{idle}{22}{66}{-36}\seg{rdS}{66}{110}{-36}
+\seg{idle}{22}{110}{-50}\seg{rdS}{110}{154}{-50}
+\seg{rdS}{154}{198}{-64}
+\draw[black!88, line width=0.7pt] (154,-50-\h) -- (154,-64);
+\node[lab, anchor=east] at (147,-64) {key needs the value of C};
+\foreach \y in {-22,-36,-50}{\node[bind] at (22,\y) {};}
+\node[bind] at (154,-64) {};
+% ---------------- (b) Prologue ----------------
+\node[ttl, anchor=west] at (80,-88) {(b) \sys};
+\row{A}{-88}\row{B}{-102}\row{C}{-116}\row{D}{-130}
+\foreach \y in {-88,-102,-116}{\seg{rdP}{22}{66}{\y}}
+\seg{rdP}{66}{110}{-130}
+\draw[black!88, line width=0.7pt] (66,-116-\h) -- (66,-130);
+\foreach \y in {-88,-102,-116}{\node[bind] at (22,\y) {};}
+\node[bind] at (66,-130) {};
+% how much earlier the values are ready
+\draw[black!50, line width=0.45pt, densely dotted] (198,-64-\h) -- (198,-136);
+\draw[black!50, line width=0.45pt, densely dotted] (110,-130+\h) -- (110,-116);
+\draw[black!85, line width=0.6pt, {Latex[length=1.4mm, width=1.2mm]}-{Latex[length=1.4mm, width=1.2mm]}] (112,-121) -- (196,-121);
+\node[ttl, anchor=south] at (154,-118) {ready earlier};
+% time axis
+\draw[black!60, line width=0.5pt, -{Latex[length=1.4mm]}] (22,-146) -- (241,-146);
+\node[lab, anchor=south east, text=black!65] at (241,-144) {time};
+% legend
+\node[bind] at (4,-160) {};
+\node[lab, anchor=west] at (10,-160) {key binds};
+\draw[idle] (62,-160-\h) rectangle (76,-160+\h);
+\node[lab, anchor=west] at (80,-160) {bound, not issued};
+\draw[rdS] (166,-160-\h) rectangle (176,-160+\h);\draw[rdP] (176,-160-\h) rectangle (186,-160+\h);
+\node[lab, anchor=west] at (190,-160) {disk read};
+\end{tikzpicture}

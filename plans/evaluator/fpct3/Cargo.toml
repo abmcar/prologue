@@ -1,0 +1,12 @@
+[package]
+name = "fpct3"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+frame-plan = { path = "../frame_plan_v3" }
+alloy-primitives = { version = "=1.6.1", default-features = false, features = ["std", "tiny-keccak"] }
+
+[profile.release]
+opt-level = 3

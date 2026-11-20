@@ -1,0 +1,15 @@
+loaded; rows 1029
+H0 -> H1: + ew=12 ewded=4 ewgas=1000000 ewov=1 ewredo=4 ixpf=256 ixpfw=1 pwheavyfirst=4 pwjitpeek=1 pwjitreal=1 reuse=2 reusebal=1 reusebalsend=1 reusechk=0 reusefast=1 reusefb=1 | minus 
+H1 -> H2: + ewcore=1 ewnear=0 ewpool=1 excore=1 exio=1 exphys=1 exrt=1 exslice=100 exsmt=1 srrt=1 | minus 
+H2 -> H3: + accflt=1 accfltchk=1000 bigra=1 ccv=1 ewinf=1 rdpeek=1 srleafselect=1 sysn=1 | minus 
+H3 -> H4: + c2rec=1 code=1 ctd=2 exclean=1 fpimp=1 prep=1 pwcs=1 pwdedup=1 pwjitkec=1 pwk=8 pwlx=1 pwlxacct=1 pwlxbin=1 pwlxbudget=1500 pwlxc2=1 pwlxcnt=1 pwlxmax=512 pwlxn=4 pwlxnoself=1 pwlxrd=8 pwlxrdacct=16 pwmin=32 pwnb=0 pwnbbh=1 pwnbbudget=30000 pwnbearly=4 pwnbgas=5000000 pwnbhist=0 pwnblevels=6 pwnblvlwait=1000 pwnbnice=10 pwnbprio=1 pwnbsep=1 pwnbval=1 pwnbwait=0 pwnodisc=1 pwstale=1 pwsync=1 rdasync=1 rddefer=1 rdjoinlate=1 rdkick=1 rdpool=1 rdscratch=1 rdstop=1 readers=8 tx=1 txdec=1 | minus code=0 tx=0
+H0 -> H5: + c2rec=1 code=1 ctd=2 exclean=1 fpimp=1 prep=1 pwcs=1 pwdedup=1 pwjitkec=1 pwk=8 pwlx=1 pwlxacct=1 pwlxbin=1 pwlxbudget=1500 pwlxc2=1 pwlxcnt=1 pwlxmax=512 pwlxn=4 pwlxnoself=1 pwlxrd=8 pwlxrdacct=16 pwmin=32 pwnb=0 pwnbbh=1 pwnbbudget=30000 pwnbearly=4 pwnbgas=5000000 pwnbhist=0 pwnblevels=6 pwnblvlwait=1000 pwnbnice=10 pwnbprio=1 pwnbsep=1 pwnbval=1 pwnbwait=0 pwnodisc=1 pwstale=1 pwsync=1 rdasync=1 rddefer=1 rdjoinlate=1 rdkick=1 rdpool=1 rdscratch=1 rdstop=1 readers=8 tx=1 txdec=1 | minus code=0 tx=0
+H5 -> H4: + accflt=1 accfltchk=1000 bigra=1 ccv=1 ew=12 ewcore=1 ewded=4 ewgas=1000000 ewinf=1 ewnear=0 ewov=1 ewpool=1 ewredo=4 excore=1 exio=1 exphys=1 exrt=1 exslice=100 exsmt=1 ixpf=256 ixpfw=1 pwheavyfirst=4 pwjitpeek=1 pwjitreal=1 rdpeek=1 reuse=2 reusebal=1 reusebalsend=1 reusechk=0 reusefast=1 reusefb=1 srleafselect=1 srrt=1 sysn=1 | minus 
+F8 -> HX: + pwlx=0 | minus pwlx=1
+F8 -> HC: + nocons=1 | minus 
+F8 -> HXC: + nocons=1 pwlx=0 | minus pwlx=1
+H0 -> H0n: + prewarm=0 | minus prewarm=1
+P8 -> P8chk: + reusechk=1 | minus reusechk=0
+P8 -> H3: +  | minus rdscratch=1
+F8 -> H4: +  | minus 
+G4qaxepkS -> F8: +  | minus 

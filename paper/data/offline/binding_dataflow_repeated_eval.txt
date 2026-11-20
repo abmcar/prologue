@@ -1,0 +1,7 @@
+POP=eval; weights {'general': 8950, 'mint': 1050}, samples {'general': 931, 'mint': 193}; per-class sums from data/binding_dataflow_repeated_{general,mint}.csv
+all        labels_start_share                       general  89.28%  mint  92.63%  all  89.76%
+all        labels_start_in_late_frame_share         general   9.82%  mint  34.80%  all  13.39%
+miss_n     labels_start_share                       general  84.05%  mint  98.56%  all  90.59%
+miss_n     labels_start_in_late_frame_share         general  45.06%  mint  91.00%  all  65.76%
+miss_wr_ns labels_start_share                       general  81.30%  mint  98.14%  all  89.37%
+miss_wr_ns labels_start_in_late_frame_share         general  38.39%  mint  89.09%  all  62.69%

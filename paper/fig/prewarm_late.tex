@@ -1,0 +1,38 @@
+% Figure "Prewarming is late on few transactions" (Section 3.3), drawn on the Design canvas 6rACGWPo4d7xbdyESvgEZ5
+% (artboard Prewarm.dc.html) at 1 pt = 2 px. Numbers: data/lateslots_m3_eval.txt (scripts/lateslots_eval.py m3 3 AB1ng),
+% last section, classes weighted 8,950 : 1,050: (a) 3.5% of transactions have their own prewarming unfinished when the
+% execution thread starts them and hold 81.6% of the slot wait; (b) at each miss, the transaction's prewarm thread is still
+% running for 79.8% of the slot wait, has finished for 19.1%, and has not reached the transaction for 1.1%.
+% Bar lengths: 175 pt for 100%. Text at 9 pt nominal (pslatex scales Helvetica by 0.9: prints at 8.1 pt).
+\begin{tikzpicture}[x=1pt, y=1pt, font=\fontsize{9}{10.8}\selectfont\sffamily,
+  ttl/.style={anchor=north west, inner sep=0pt, font=\fontsize{9}{10.8}\selectfont\sffamily\bfseries},
+  rowl/.style={anchor=east, inner sep=0pt},
+  late/.style={fill=cStock, draw=none},
+  done/.style={fill=black!15, draw=none},
+  none/.style={fill=black!58, draw=none},
+]
+\colorlet{cLateText}{cStock!80!black}
+% ---------------- (a) ----------------
+\node[ttl] at (0,0) {(a) Prewarming unfinished when execution starts};
+\fill[cStock!30] (229,-27) -- (235,-27) -- (235,-38) -- (92,-38) -- cycle;
+\node[rowl] at (55,-21.5) {transactions};
+\fill[done] (60,-16) rectangle (229,-27);
+\fill[late] (229,-16) rectangle (235,-27);
+\node[anchor=east, inner sep=0pt, font=\fontsize{9}{10.8}\selectfont\sffamily\bfseries] at (226,-21.5) {3.5\%};
+\node[rowl] at (55,-43.5) {slot wait};
+\fill[done] (60,-38) rectangle (92,-49);
+\fill[late] (92,-38) rectangle (235,-49);
+\node[anchor=west, inner sep=0pt, text=white, font=\fontsize{9}{10.8}\selectfont\sffamily\bfseries] at (96,-43.5) {81.6\%};
+% ---------------- (b) ----------------
+\node[ttl] at (0,-61) {(b) Its prewarm thread at each slot miss};
+\node[anchor=east, inner sep=0pt, text=black!70] at (235,-71.5) {not reached 1.1\%};
+\draw[black!58, line width=0.6pt] (234,-75.2) -- (234,-77);
+\node[rowl] at (55,-82.5) {slot wait};
+\fill[late] (60,-77) rectangle (199.5,-88);
+\fill[done] (199.5,-77) rectangle (233,-88);
+\fill[none] (233,-77) rectangle (235,-88);
+\node[anchor=west, inner sep=0pt, text=white, font=\fontsize{9}{10.8}\selectfont\sffamily\bfseries] at (64,-82.5) {79.8\%};
+\node[inner sep=0pt, text=black!80] at (216.25,-82.5) {19.1\%};
+\node[anchor=west, inner sep=0pt] at (60,-94.5) {running};
+\node[inner sep=0pt, text=black!70] at (216.25,-94.5) {finished};
+\end{tikzpicture}

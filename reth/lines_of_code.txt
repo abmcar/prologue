@@ -1,0 +1,14 @@
+Lines of Rust added to reth 2.9.0 by Prologue, without tests, by part.
+Counted on the development history of patch 0002 with git blame (each added line is assigned to the commit that wrote
+it and the commit to a part), so the split cannot be recomputed from the single-commit patch.
+
+  access plans                                              4614
+  pre-execution                                             3742
+  scheduling                                                1857
+  read engine                                               1669
+  plan evaluator (crates/frame-plan, non-test lines)        1375
+  total of the five parts                                  13257
+
+  configuration, engine hooks, diagnostics, tests           5647
+  switches that are off in the measured configuration       6742
+  unassigned                                                  56

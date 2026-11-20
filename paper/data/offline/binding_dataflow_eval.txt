@@ -1,0 +1,76 @@
+POP=eval; weights: general 8950, batch-mint 1050; samples {'general': 931, 'mint': 193}; items 2713822, duplicates 0
+== scope all
+  _total                                               general 2,095,651  mint 618,171  all 23,509,268
+  _total_table1                                        general 2,095,651  mint 618,171  all 23,509,268
+  _creation                                            general 993  mint 254  all 10,928
+  _X_table1                                            general 768  mint 174  all 8,330
+  call: start                                          general  89.277%  mint  92.630%  all  89.757%
+  call: stor                                           general   9.354%  mint   6.586%  all   8.958%
+  call: ret                                            general   0.533%  mint   0.382%  all   0.511%
+  call: oth                                            general   0.836%  mint   0.403%  all   0.774%
+  call: start, entry call                              general  20.047%  mint  14.329%  all  19.229%
+  call: start, inner calls                             general  69.230%  mint  78.301%  all  70.528%
+  x: plan and dataflow                                 general  80.351%  mint  85.061%  all  81.024%
+  x: plan only                                         general   0.287%  mint   0.187%  all   0.273%
+  x: dataflow only                                     general   8.881%  mint   7.530%  all   8.688%
+  x: neither                                           general  10.434%  mint   7.181%  all   9.968%
+  x: creation frames                                   general   0.047%  mint   0.041%  all   0.046%
+  x: check plan total (= Table 1 class 1+2)            general  80.638%  mint  85.248%  all  81.297%
+  table1: class 1+2                                    general  80.649%  mint  85.261%  all  81.308%
+  tx: arr_lo                                           general  36.252%  mint  34.604%  all  36.017%
+  tx: arr_hi (incl. arr_lo)                            general  75.813%  mint  63.903%  all  74.109%
+  tx: arr_lo, entry call                               general  20.232%  mint  14.436%  all  19.403%
+  tx: arr_lo, inner calls                              general  16.020%  mint  20.168%  all  16.613%
+  tx: arr_hi, inner calls                              general  55.580%  mint  49.467%  all  54.706%
+  tx: call start but not arr_hi                        general  13.942%  mint  29.033%  all  16.101%
+  tx: not arr_hi, nothing changed earlier in the block general  13.965%  mint  19.276%  all  14.725%
+== scope miss_n
+  _total                                               general 92,034  mint 133,412  all 1,610,569
+  _total_table1                                        general 92,034  mint 133,412  all 1,610,569
+  _creation                                            general 0  mint 0  all 0
+  _X_table1                                            general 0  mint 0  all 0
+  call: start                                          general  84.049%  mint  98.563%  all  90.590%
+  call: stor                                           general  14.802%  mint   1.338%  all   8.734%
+  call: ret                                            general   0.895%  mint   0.090%  all   0.532%
+  call: oth                                            general   0.253%  mint   0.009%  all   0.143%
+  call: start, entry call                              general   2.961%  mint   0.498%  all   1.851%
+  call: start, inner calls                             general  81.089%  mint  98.065%  all  88.739%
+  x: plan and dataflow                                 general  77.424%  mint  97.662%  all  86.544%
+  x: plan only                                         general   0.432%  mint   0.017%  all   0.245%
+  x: dataflow only                                     general   6.626%  mint   0.901%  all   4.046%
+  x: neither                                           general  15.518%  mint   1.420%  all   9.165%
+  x: creation frames                                   general   0.000%  mint   0.000%  all   0.000%
+  x: check plan total (= Table 1 class 1+2)            general  77.856%  mint  97.679%  all  86.790%
+  table1: class 1+2                                    general  77.856%  mint  97.679%  all  86.790%
+  tx: arr_lo                                           general  31.230%  mint  21.681%  all  26.927%
+  tx: arr_hi (incl. arr_lo)                            general  63.651%  mint  28.562%  all  47.838%
+  tx: arr_lo, entry call                               general   3.127%  mint   0.501%  all   1.943%
+  tx: arr_lo, inner calls                              general  28.103%  mint  21.180%  all  24.983%
+  tx: arr_hi, inner calls                              general  60.524%  mint  28.061%  all  45.895%
+  tx: call start but not arr_hi                        general  20.733%  mint  70.017%  all  42.943%
+  tx: not arr_hi, nothing changed earlier in the block general  24.327%  mint  29.185%  all  26.516%
+== scope miss_wr_ns
+  _total                                               general 6,730,982,588  mint 10,950,193,519  all 124,280,674,565
+  _total_table1                                        general 6,730,982,588  mint 10,950,193,519  all 124,280,674,565
+  _creation                                            general 0  mint 0  all 0
+  _X_table1                                            general 0  mint 0  all 0
+  call: start                                          general  81.296%  mint  98.141%  all  89.371%
+  call: stor                                           general  17.414%  mint   1.746%  all   9.903%
+  call: ret                                            general   0.938%  mint   0.099%  all   0.536%
+  call: oth                                            general   0.352%  mint   0.014%  all   0.190%
+  call: start, entry call                              general   4.046%  mint   0.554%  all   2.372%
+  call: start, inner calls                             general  77.250%  mint  97.587%  all  86.999%
+  x: plan and dataflow                                 general  75.549%  mint  97.358%  all  86.003%
+  x: plan only                                         general   0.313%  mint   0.008%  all   0.167%
+  x: dataflow only                                     general   5.748%  mint   0.783%  all   3.368%
+  x: neither                                           general  18.390%  mint   1.851%  all  10.462%
+  x: creation frames                                   general   0.000%  mint   0.000%  all   0.000%
+  x: check plan total (= Table 1 class 1+2)            general  75.862%  mint  97.366%  all  86.170%
+  table1: class 1+2                                    general  75.862%  mint  97.366%  all  86.170%
+  tx: arr_lo                                           general  32.350%  mint  22.592%  all  27.672%
+  tx: arr_hi (incl. arr_lo)                            general  61.388%  mint  28.753%  all  45.744%
+  tx: arr_lo, entry call                               general   4.221%  mint   0.555%  all   2.464%
+  tx: arr_lo, inner calls                              general  28.129%  mint  22.036%  all  25.209%
+  tx: arr_hi, inner calls                              general  57.167%  mint  28.197%  all  43.281%
+  tx: call start but not arr_hi                        general  20.333%  mint  69.410%  all  43.858%
+  tx: not arr_hi, nothing changed earlier in the block general  25.708%  mint  30.189%  all  27.856%

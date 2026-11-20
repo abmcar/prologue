@@ -1,0 +1,49 @@
+% Section 2.3 figure: the execution thread's time per Mgas by block class, waiting for storage (slots, accounts and code)
+% and the rest of execution, without prewarming and with reth's prewarming (stock reth); beside each bar the wait's share,
+% data/f270_motiv.csv (columns wait, rest, tlab = total, spct = wait share); the column x (bar positions) is not used, the
+% positions are set below.
+% shared cNoPre (was a lighter grey of its own); one x unit is one point: each class takes 55 pt, its two bars are 7 pt wide
+% and 27 pt apart, so the 8.1 pt share fits beside each bar; class names on two lines. The share sits at the middle of
+% the wait, at least 0.23 ms above the axis so that it clears the axis line (stock reth, all and regular blocks). The two kinds of time are
+% named right of the y axis on a white ground, so neither the axis line nor the grid runs through them; each class now takes 53 pt.
+% Build: fig/bg_split_standalone.tex with LuaLaTeX.
+\pgfplotstableread[col sep=comma]{data/f270_motiv.csv}\bgMot
+% one bar: #1 row of data/f270_motiv.csv, #2 left edge (pt), #3 colour prefix
+\newcommand\bgBar[3]{%
+  \pgfplotstablegetelem{#1}{wait}\of\bgMot\edef\bgA{\pgfplotsretval}%
+  \pgfplotstablegetelem{#1}{rest}\of\bgMot\edef\bgC{\pgfplotsretval}%
+  \pgfplotstablegetelem{#1}{tlab}\of\bgMot\edef\bgT{\pgfplotsretval}%
+  \pgfplotstablegetelem{#1}{spct}\of\bgMot\edef\bgP{\pgfplotsretval}%
+  \pgfmathsetmacro\bgYa{\bgA}\pgfmathsetmacro\bgYc{\bgA+\bgC}\pgfmathsetmacro\bgYm{max(\bgA/2,0.23)}%
+  \pgfmathsetmacro\bgL{#2}\pgfmathsetmacro\bgH{#2+7}\pgfmathsetmacro\bgX{#2+3.5}%
+  \edef\bgTmp{%
+    \noexpand\fill[#3S] (axis cs:\bgL,0) rectangle (axis cs:\bgH,\bgYa);
+    \noexpand\fill[#3L] (axis cs:\bgL,\bgYa) rectangle (axis cs:\bgH,\bgYc);
+    \noexpand\draw[#3D, line width=0.5pt] (axis cs:\bgL,\bgYa) -- (axis cs:\bgH,\bgYa);
+    \noexpand\draw[#3D, line width=0.6pt] (axis cs:\bgL,0) rectangle (axis cs:\bgH,\bgYc);
+    \noexpand\node[eap value, anchor=south] at (axis cs:\bgX,\bgYc) {\bgT};
+    \noexpand\node[eap ratio, anchor=west] at (axis cs:\bgH,\bgYm) {\bgP\noexpand\%};}%
+  \bgTmp}
+\begin{tikzpicture}
+\begin{axis}[eap axis, eap linear y, scale only axis, width=203.5pt, height=92pt, xmin=0, xmax=203.5, ymin=0, ymax=4.1,
+  ytick={0,1,2,3,4}, ylabel={Execution time (ms per \mgas)},
+  xtick={63,116,169}, xticklabels={All\\blocks, Regular\\blocks, Batch-mint\\blocks}, xtick style={draw=none},
+  xticklabel style={align=center}]
+\bgBar{0}{46}{cNoPre}\bgBar{1}{73}{cStock}
+\bgBar{2}{99}{cNoPre}\bgBar{3}{126}{cStock}
+\bgBar{4}{152}{cNoPre}\bgBar{5}{179}{cStock}
+% the two kinds of time, named once left of the first bar; leaders end at the middle of each segment
+\pgfplotstablegetelem{0}{wait}\of\bgMot\edef\bgA{\pgfplotsretval}%
+\pgfplotstablegetelem{0}{rest}\of\bgMot\edef\bgC{\pgfplotsretval}%
+\pgfmathsetmacro\bgMa{\bgA/2}\pgfmathsetmacro\bgMc{\bgA+\bgC/2}%
+\edef\bgTmp{%
+  \noexpand\node[eap value, anchor=east, align=right, fill=white] (bgKa) at (axis cs:40,\bgMa) {Storage\\wait};
+  \noexpand\node[eap value, anchor=east, align=right, fill=white] (bgKc) at (axis cs:40,\bgMc) {Rest of\\execution};
+  \noexpand\draw[black!60, line width=0.45pt] (axis cs:40.5,\bgMa) -- (axis cs:49.5,\bgMa);
+  \noexpand\draw[black!60, line width=0.45pt] (axis cs:40.5,\bgMc) -- (axis cs:49.5,\bgMc);}%
+\bgTmp
+\end{axis}
+% legend: the two configurations, one row above the plot
+\node[eap legend, anchor=south] at ($(current axis.north west)!0.5!(current axis.north east) + (0,6pt)$)
+  {\eapKeyBox{cNoPreS}{cNoPreD}\,Without prewarming\eapKeySep\eapKeyBox{cStockS}{cStockD}\,Stock reth (with prewarming)};
+\end{tikzpicture}

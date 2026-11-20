@@ -1,0 +1,6 @@
+# paper/scripts/blockreads_e273.py: 10000 blocks (regular 8950, batch-mint 1050), 46 windows of 1,000 blocks moved by 200
+windows recomputed from the blocks file: 46 of 46 agree (median reads, batch-mint count, three ratios within 0.0005)
+per-block PN/UP below 0.3: 271; above 2.0: 10; blocks with fewer than 250 slot reads: 91; with more than 6,500: 4
+slot reads: min 11, median 2075.0, max 7812
+first window: median reads 478.5, PN/UP 0.970 (0.956-0.984); last window: median reads 3924.0, PN/UP 0.589 (0.571-0.606), PN/UR 0.604, UR/UP 0.975; UR/UP over windows 0.927-0.985
+quarter: 2500 blocks (regular 2238, batch-mint 262); ratio below 0.2: 6, above 2.0: 2; fewer than 250 slot reads: 31

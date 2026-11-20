@@ -1,0 +1,17 @@
+recorder process: 2700 blocks under all 5 rows (regular 2519, batch-mint 181)
+per block (ms): execution, storage wait (slot + account + code) and its share, rest, outside execution, newPayload; and per Mgas: execution, wait, rest
+H0n all  n= 2700 execution  69.91 wait  45.70 (65.4%) slot  30.63 rest  24.22 outside  4.43 newPayload  74.35; per Mgas execution 2.304 wait 1.506 rest 0.798
+H0n reg  n= 2519 execution  65.46 wait  41.43 (63.3%) slot  26.94 rest  24.03 outside  4.38 newPayload  69.84; per Mgas execution 2.195 wait 1.389 rest 0.806
+H0n mint n=  181 execution 131.91 wait 105.08 (79.7%) slot  82.02 rest  26.83 outside  5.12 newPayload 137.03; per Mgas execution 3.497 wait 2.786 rest 0.711
+H0  all  n= 2700 execution  28.32 wait   8.15 (28.8%) slot   6.53 rest  20.17 outside  4.18 newPayload  32.50; per Mgas execution 0.933 wait 0.269 rest 0.665
+H0  reg  n= 2519 execution  25.48 wait   5.56 (21.8%) slot   4.32 rest  19.92 outside  4.12 newPayload  29.60; per Mgas execution 0.855 wait 0.186 rest 0.668
+H0  mint n=  181 execution  67.84 wait  44.27 (65.2%) slot  37.28 rest  23.58 outside  5.01 newPayload  72.85; per Mgas execution 1.799 wait 1.174 rest 0.625
+H3  all  n= 2700 execution  22.46 wait   9.82 (43.7%) slot   8.20 rest  12.64 outside  5.36 newPayload  27.82; per Mgas execution 0.740 wait 0.324 rest 0.417
+H3  reg  n= 2519 execution  19.74 wait   7.25 (36.7%) slot   5.95 rest  12.49 outside  5.24 newPayload  24.98; per Mgas execution 0.662 wait 0.243 rest 0.419
+H3  mint n=  181 execution  60.30 wait  45.58 (75.6%) slot  39.40 rest  14.73 outside  7.03 newPayload  67.33; per Mgas execution 1.599 wait 1.208 rest 0.390
+H4  all  n= 2700 execution  19.76 wait   6.65 (33.7%) slot   5.41 rest  13.11 outside  5.48 newPayload  25.24; per Mgas execution 0.651 wait 0.219 rest 0.432
+H4  reg  n= 2519 execution  19.26 wait   6.29 (32.6%) slot   5.15 rest  12.97 outside  5.38 newPayload  24.64; per Mgas execution 0.646 wait 0.211 rest 0.435
+H4  mint n=  181 execution  26.81 wait  11.72 (43.7%) slot   9.07 rest  15.09 outside  6.82 newPayload  33.63; per Mgas execution 0.711 wait 0.311 rest 0.400
+H5  all  n= 2700 execution  26.42 wait   6.40 (24.2%) slot   4.99 rest  20.02 outside  4.27 newPayload  30.69; per Mgas execution 0.871 wait 0.211 rest 0.660
+H5  reg  n= 2519 execution  25.87 wait   6.09 (23.6%) slot   4.79 rest  19.77 outside  4.23 newPayload  30.09; per Mgas execution 0.867 wait 0.204 rest 0.663
+H5  mint n=  181 execution  34.14 wait  10.68 (31.3%) slot   7.76 rest  23.46 outside  4.83 newPayload  38.96; per Mgas execution 0.905 wait 0.283 rest 0.622

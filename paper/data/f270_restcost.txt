@@ -1,0 +1,28 @@
+# paper restcost247_e270.py: reference H0, rows ['H3', 'H4', 'H5']; counted blocks; per block means (ms unless noted)
+
+== H3 against H0 on the same 2700 blocks: execution 28.322 -> 22.462 ms (shorter by 5.860)
+    reused:   43.0 transactions per block; execution thread   1.179 ms (waits 0.021, computation 1.158); under H0 on the same transactions   7.187 ms (waits 0.381, computation 6.806); shorter by +6.007 (waits +0.359, computation +5.648); per transaction 27.4 us against 167.0 us; computation ratio 0.170
+  executed:   18.4 transactions per block; execution thread   3.798 ms (waits 0.374, computation 3.424); under H0 on the same transactions   4.901 ms (waits 0.699, computation 4.202); shorter by +1.104 (waits +0.325, computation +0.779); per transaction 206.8 us against 266.9 us; computation ratio 0.815
+      late:   12.9 transactions per block; execution thread  14.245 ms (waits 9.298, computation 4.947); under H0 on the same transactions  12.302 ms (waits 6.887, computation 5.415); shorter by -1.942 (waits -2.411, computation +0.469); per transaction 1103.1 us against 952.7 us; computation ratio 0.913
+     small:  173.5 transactions per block; execution thread   1.339 ms (waits 0.087, computation 1.252); under H0 on the same transactions   2.090 ms (waits 0.077, computation 2.012); shorter by +0.750 (waits -0.010, computation +0.760); per transaction 7.7 us against 12.0 us; computation ratio 0.622
+  outside transactions: 1.901 ms against 1.843 (shorter by -0.059)
+  sum: waits -1.737 + computation +7.655 + outside -0.059 = +5.860 ms; execution shorter by +5.860
+  execution thread per block: run-queue 1.126 -> 0.111 ms, cpu 22.369 -> 14.818 ms, involuntary switches 5.4 -> 2.2, minor faults 137.0 -> 106.3, major 69.8 -> 60.0
+
+== H4 against H0 on the same 2700 blocks: execution 28.322 -> 19.763 ms (shorter by 8.559)
+    reused:   41.4 transactions per block; execution thread   1.071 ms (waits 0.019, computation 1.052); under H0 on the same transactions   6.896 ms (waits 0.635, computation 6.262); shorter by +5.826 (waits +0.616, computation +5.210); per transaction 25.8 us against 166.5 us; computation ratio 0.168
+  executed:   19.1 transactions per block; execution thread   3.880 ms (waits 0.357, computation 3.523); under H0 on the same transactions   4.985 ms (waits 0.727, computation 4.259); shorter by +1.106 (waits +0.370, computation +0.736); per transaction 203.6 us against 261.6 us; computation ratio 0.827
+      late:   13.2 transactions per block; execution thread  11.564 ms (waits 6.182, computation 5.382); under H0 on the same transactions  12.486 ms (waits 6.591, computation 5.895); shorter by +0.922 (waits +0.409, computation +0.513); per transaction 875.5 us against 945.3 us; computation ratio 0.913
+     small:  174.1 transactions per block; execution thread   1.305 ms (waits 0.054, computation 1.251); under H0 on the same transactions   2.111 ms (waits 0.090, computation 2.021); shorter by +0.807 (waits +0.037, computation +0.770); per transaction 7.5 us against 12.1 us; computation ratio 0.619
+  outside transactions: 1.944 ms against 1.843 (shorter by -0.101)
+  sum: waits +1.432 + computation +7.229 + outside -0.101 = +8.559 ms; execution shorter by +8.559
+  execution thread per block: run-queue 1.126 -> 0.122 ms, cpu 22.369 -> 15.110 ms, involuntary switches 5.4 -> 2.3, minor faults 137.0 -> 98.5, major 69.8 -> 53.0
+
+== H5 against H0 on the same 2700 blocks: execution 28.322 -> 26.421 ms (shorter by 1.901)
+    reused:    4.5 transactions per block; execution thread   0.222 ms (waits 0.007, computation 0.215); under H0 on the same transactions   0.719 ms (waits 0.066, computation 0.652); shorter by +0.497 (waits +0.059, computation +0.438); per transaction 49.2 us against 159.6 us; computation ratio 0.329
+  executed:   60.1 transactions per block; execution thread  11.773 ms (waits 1.097, computation 10.675); under H0 on the same transactions  12.628 ms (waits 1.793, computation 10.835); shorter by +0.856 (waits +0.696, computation +0.160); per transaction 195.8 us against 210.1 us; computation ratio 0.985
+      late:    7.0 transactions per block; execution thread  10.247 ms (waits 5.136, computation 5.112); under H0 on the same transactions  10.991 ms (waits 6.095, computation 4.897); shorter by +0.744 (waits +0.959, computation -0.215); per transaction 1467.7 us against 1574.3 us; computation ratio 1.044
+     small:  176.2 transactions per block; execution thread   2.263 ms (waits 0.044, computation 2.220); under H0 on the same transactions   2.141 ms (waits 0.090, computation 2.051); shorter by -0.122 (waits +0.046, computation -0.168); per transaction 12.8 us against 12.2 us; computation ratio 1.082
+  outside transactions: 1.916 ms against 1.843 (shorter by -0.073)
+  sum: waits +1.759 + computation +0.215 + outside -0.073 = +1.901 ms; execution shorter by +1.901
+  execution thread per block: run-queue 1.126 -> 1.771 ms, cpu 22.369 -> 22.043 ms, involuntary switches 5.4 -> 10.6, minor faults 137.0 -> 122.8, major 69.8 -> 43.8

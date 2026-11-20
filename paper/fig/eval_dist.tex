@@ -1,0 +1,68 @@
+% per-block times) and data/f270_dist_pct.csv (p50, p95, p99 of stock reth and Prologue, the 5,000th, 500th and 100th
+% slowest of 10,000 blocks, and their ratio, rlab). (a) end-to-end time, (b) execution time: share of blocks at least as slow
+% as x (log-log), stock reth, stock reth + reuse and Prologue; each curve marked at its p50, p95 and p99, an arrow from stock
+% reth's mark to Prologue's where they are far apart, labelled with stock reth's percentile over Prologue's.
+% 7.3 pt) in Helvetica, ratios with Helvetica's times sign; stock reth + reuse in its own colour, orange, dotted (was a light
+% tint of stock reth's vermillion); the percentile marks in each configuration's marker shape (Prologue diamond, stock reth
+% square), so the legend needs no entry of its own for them; the y axis named once for both panels; time axis 5-500 ms,
+% where the curves are (was 2-3,000 ms: every block takes at least 1.9 ms end to end, and no block takes more than 360 ms).
+% Build: fig/eval_dist_standalone.tex with LuaLaTeX.
+\pgfplotstableread[col sep=comma]{data/f270_ccdf_exec.csv}\bdExec
+\pgfplotstableread[col sep=comma]{data/f270_ccdf_np.csv}\bdNp
+\pgfplotstableread[col sep=comma]{data/f270_dist_pct.csv}\bdPct
+% percentile marks for one panel: #1 first row of data/f270_dist_pct.csv for the panel (0 end to end, 3 execution)
+\newcommand\bdPctMarks[1]{%
+  \pgfplotsforeachungrouped \bdI in {0,1,2}{%
+    \pgfmathtruncatemacro\bdR{#1+\bdI}%
+    \pgfplotstablegetelem{\bdR}{q}\of\bdPct\edef\bdQ{\pgfplotsretval}%
+    \pgfplotstablegetelem{\bdR}{frac}\of\bdPct\edef\bdF{\pgfplotsretval}%
+    \pgfplotstablegetelem{\bdR}{stock}\of\bdPct\edef\bdS{\pgfplotsretval}%
+    \pgfplotstablegetelem{\bdR}{sys}\of\bdPct\edef\bdP{\pgfplotsretval}%
+    \pgfplotstablegetelem{\bdR}{rlab}\of\bdPct\edef\bdL{\pgfplotsretval}%
+    \pgfmathsetmacro\bdLx{\bdP/1.12}%
+    \pgfmathtruncatemacro\bdArrow{\bdS/\bdP > 1.5 ? 1 : 0}% (shorter arrows would hide under the two marks)
+    \ifnum\bdArrow=1
+      \edef\bdTmp{\noexpand\draw[-{Latex[length=1.5mm, width=1.3mm]}, black!70, line width=0.6pt, shorten <=3.4pt,
+        shorten >=3.6pt] (axis cs:\bdS,\bdF) -- (axis cs:\bdP,\bdF);}\bdTmp
+    \fi
+    \edef\bdTmp{%
+      \noexpand\node[eap mark stock] at (axis cs:\bdS,\bdF) {};
+      \noexpand\node[eap mark plan] at (axis cs:\bdP,\bdF) {};}%
+    \bdTmp
+    % the label left of Prologue's mark; at p50 below and left of it, since there the curves run within 6 pt above the
+    % mark's level all the way to its left
+    \ifnum\bdI=0
+      \edef\bdTmp{\noexpand\node[eap value, anchor=north east] at ($(axis cs:\bdP,\bdF)+(-2.6pt,-2.4pt)$)
+        {\bdQ{} \noexpand\textbf{\bdL}\noexpand\eapx};}%
+    \else
+      \edef\bdTmp{\noexpand\node[eap value, anchor=east] at (axis cs:\bdLx,\bdF) {\bdQ{} \noexpand\textbf{\bdL}\noexpand\eapx};}%
+    \fi
+    \bdTmp}}
+\begin{tikzpicture}
+\begin{groupplot}[
+  group style={group size=2 by 1, horizontal sep=34pt},
+  eap axis, scale only axis, width=198pt, height=80pt,
+  xmode=log, ymode=log, xmin=5, xmax=500, ymin=0.0001, ymax=1, clip=true, clip mode=individual,
+  xtick={5,10,20,50,100,200,500}, xticklabels={5,10,20,50,100,200,500}, minor xtick={},
+  ytick={1,0.1,0.01,0.001,0.0001}, yticklabels={100\%,10\%,1\%,0.1\%,0.01\%}, minor ytick={},
+  xlabel={Time per block (ms)},
+]
+% ---------------- (a) end-to-end time ----------------
+\nextgroupplot[title={(a) End-to-end time}, ylabel={Blocks at least\\this slow}, ylabel style={align=center}]
+\addplot[eap line reuse] table[x=reuse, y=frac] {\bdNp};
+\addplot[eap line stock] table[x=stock, y=frac] {\bdNp};
+\addplot[eap line plan] table[x=sys, y=frac] {\bdNp};
+\bdPctMarks{0}
+% ---------------- (b) execution time ----------------
+\nextgroupplot[title={(b) Execution time}]
+\addplot[eap line reuse] table[x=reuse, y=frac] {\bdExec};
+\addplot[eap line stock] table[x=stock, y=frac] {\bdExec};
+\addplot[eap line plan] table[x=sys, y=frac] {\bdExec};
+\bdPctMarks{3}
+\end{groupplot}
+% legend: one row centred above both panels
+\node[eap legend, anchor=south] at ($(group c1r1.north west)!0.5!(group c2r1.north east) + (0,21pt)$)
+  {\eapKeyMark{eap mark plan}{eap line plan}\,\sys\eapKeySep
+   \eapKeyMark{eap mark stock}{eap line stock}\,Stock reth\eapKeySep
+   \eapKeyLine{eap line reuse}\,Stock reth + reuse};
+\end{tikzpicture}

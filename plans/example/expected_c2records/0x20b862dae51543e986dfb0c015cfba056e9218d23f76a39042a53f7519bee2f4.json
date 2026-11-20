@@ -1,0 +1,621 @@
+{
+ "codehash": "0x20b862dae51543e986dfb0c015cfba056e9218d23f76a39042a53f7519bee2f4",
+ "address": "",
+ "secs": 1.66,
+ "records": [
+  {
+   "sel": "4d53d426",
+   "site": "C2CALC",
+   "pc": 3184,
+   "creator": null,
+   "salt": {
+    "form": "kec",
+    "segs": [
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cd",
+       "off": 4
+      },
+      "lo": 0,
+      "hi": 32
+     },
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cd",
+       "off": 36
+      },
+      "lo": 0,
+      "hi": 32
+     },
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cd",
+       "off": 68
+      },
+      "lo": 0,
+      "hi": 32
+     },
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cd",
+       "off": 100
+      },
+      "lo": 0,
+      "hi": 32
+     },
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cd",
+       "off": 132
+      },
+      "lo": 0,
+      "hi": 32
+     },
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cd",
+       "off": 164
+      },
+      "lo": 0,
+      "hi": 32
+     }
+    ]
+   },
+   "init": {
+    "hash": "0x60fb67f495cb33d68586331ca0f68a8a2e7b514fcbb1da2d3ba9cc92a08e6114",
+    "len": 55
+   },
+   "n_sites": 1,
+   "dims": 0,
+   "variants": 1,
+   "updates": []
+  },
+  {
+   "sel": "4e57ec12",
+   "site": "C2CALC",
+   "pc": 3184,
+   "creator": null,
+   "salt": {
+    "form": "kec",
+    "segs": [
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cd",
+       "off": 4
+      },
+      "lo": 0,
+      "hi": 32
+     },
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cd",
+       "off": 36
+      },
+      "lo": 0,
+      "hi": 32
+     },
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cd",
+       "off": 68
+      },
+      "lo": 0,
+      "hi": 32
+     }
+    ]
+   },
+   "init": {
+    "hash": "0x8425eb6e300dc98fe78488ed0d2539d0bc3089ebbe508342f09d97cbfb0b22de",
+    "len": 55
+   },
+   "n_sites": 1,
+   "dims": 0,
+   "variants": 1,
+   "updates": []
+  },
+  {
+   "sel": "505a372c",
+   "site": "C2CALC",
+   "pc": 3184,
+   "creator": null,
+   "salt": {
+    "form": "kec",
+    "segs": [
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cd",
+       "off": 4
+      },
+      "lo": 0,
+      "hi": 32
+     },
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cd",
+       "off": 36
+      },
+      "lo": 0,
+      "hi": 32
+     },
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cd",
+       "off": 68
+      },
+      "lo": 0,
+      "hi": 32
+     },
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cd",
+       "off": 100
+      },
+      "lo": 0,
+      "hi": 32
+     },
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cd",
+       "off": 132
+      },
+      "lo": 0,
+      "hi": 32
+     },
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cd",
+       "off": 164
+      },
+      "lo": 0,
+      "hi": 32
+     }
+    ]
+   },
+   "init": {
+    "hash": "0xd616e693043c69665b941d80310599ae1317df889e2e66b03d852eb5747e0ee4",
+    "len": 55
+   },
+   "n_sites": 1,
+   "dims": 0,
+   "variants": 1,
+   "updates": []
+  },
+  {
+   "sel": "0f28edeb",
+   "site": "CREATE2",
+   "pc": 3373,
+   "creator": null,
+   "salt": {
+    "form": "kec",
+    "segs": [
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cd",
+       "off": 4
+      },
+      "lo": 0,
+      "hi": 32
+     },
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cd",
+       "off": 36
+      },
+      "lo": 0,
+      "hi": 32
+     },
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cd",
+       "off": 68
+      },
+      "lo": 0,
+      "hi": 32
+     }
+    ]
+   },
+   "init": {
+    "hash": "0x8425eb6e300dc98fe78488ed0d2539d0bc3089ebbe508342f09d97cbfb0b22de",
+    "len": 55
+   },
+   "n_sites": 1,
+   "dims": 0,
+   "variants": 1,
+   "updates": []
+  },
+  {
+   "sel": "5ab18e2e",
+   "site": "CREATE2",
+   "pc": 3373,
+   "creator": null,
+   "salt": {
+    "form": "kec",
+    "segs": [
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cdat",
+       "add": 36,
+       "off_word": 4
+      },
+      "lo": 0,
+      "hi": 32
+     },
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cdat",
+       "add": 36,
+       "off_word": 36
+      },
+      "lo": 0,
+      "hi": 32
+     },
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cdat",
+       "add": 36,
+       "off_word": 68
+      },
+      "lo": 0,
+      "hi": 32
+     },
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cdat",
+       "add": 68,
+       "off_word": 68
+      },
+      "lo": 0,
+      "hi": 32
+     },
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cdat",
+       "add": 100,
+       "off_word": 68
+      },
+      "lo": 0,
+      "hi": 32
+     },
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cdat",
+       "add": 132,
+       "off_word": 68
+      },
+      "lo": 0,
+      "hi": 32
+     }
+    ]
+   },
+   "init": {
+    "hash": "0xd616e693043c69665b941d80310599ae1317df889e2e66b03d852eb5747e0ee4",
+    "len": 55
+   },
+   "n_sites": 1,
+   "dims": 0,
+   "variants": 1,
+   "updates": []
+  },
+  {
+   "sel": "6671c14f",
+   "site": "CREATE2",
+   "pc": 3373,
+   "creator": null,
+   "salt": {
+    "form": "kec",
+    "segs": [
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cdat",
+       "add": 36,
+       "off_word": 4
+      },
+      "lo": 0,
+      "hi": 32
+     },
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cdat",
+       "add": 36,
+       "off_word": 36
+      },
+      "lo": 0,
+      "hi": 32
+     },
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cdat",
+       "add": 36,
+       "off_word": 68
+      },
+      "lo": 0,
+      "hi": 32
+     },
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cdat",
+       "add": 68,
+       "off_word": 68
+      },
+      "lo": 0,
+      "hi": 32
+     },
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cdat",
+       "add": 100,
+       "off_word": 68
+      },
+      "lo": 0,
+      "hi": 32
+     },
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cdat",
+       "add": 132,
+       "off_word": 68
+      },
+      "lo": 0,
+      "hi": 32
+     }
+    ]
+   },
+   "init": {
+    "hash": "0x60fb67f495cb33d68586331ca0f68a8a2e7b514fcbb1da2d3ba9cc92a08e6114",
+    "len": 55
+   },
+   "n_sites": 1,
+   "dims": 0,
+   "variants": 1,
+   "updates": []
+  },
+  {
+   "sel": "7e0ef685",
+   "site": "CREATE2",
+   "pc": 3373,
+   "creator": null,
+   "salt": {
+    "form": "kec",
+    "segs": [
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cd",
+       "off": 4
+      },
+      "lo": 0,
+      "hi": 32
+     },
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cd",
+       "off": 36
+      },
+      "lo": 0,
+      "hi": 32
+     },
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cd",
+       "off": 68
+      },
+      "lo": 0,
+      "hi": 32
+     },
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cd",
+       "off": 100
+      },
+      "lo": 0,
+      "hi": 32
+     },
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cd",
+       "off": 132
+      },
+      "lo": 0,
+      "hi": 32
+     },
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cd",
+       "off": 164
+      },
+      "lo": 0,
+      "hi": 32
+     }
+    ]
+   },
+   "init": {
+    "hash": "0x60fb67f495cb33d68586331ca0f68a8a2e7b514fcbb1da2d3ba9cc92a08e6114",
+    "len": 55
+   },
+   "n_sites": 1,
+   "dims": 0,
+   "variants": 1,
+   "updates": []
+  },
+  {
+   "sel": "ebfc3de2",
+   "site": "CREATE2",
+   "pc": 3373,
+   "creator": null,
+   "salt": {
+    "form": "kec",
+    "segs": [
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cd",
+       "off": 4
+      },
+      "lo": 0,
+      "hi": 32
+     },
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cd",
+       "off": 36
+      },
+      "lo": 0,
+      "hi": 32
+     },
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cd",
+       "off": 68
+      },
+      "lo": 0,
+      "hi": 32
+     },
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cd",
+       "off": 100
+      },
+      "lo": 0,
+      "hi": 32
+     },
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cd",
+       "off": 132
+      },
+      "lo": 0,
+      "hi": 32
+     },
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cd",
+       "off": 164
+      },
+      "lo": 0,
+      "hi": 32
+     }
+    ]
+   },
+   "init": {
+    "hash": "0xd616e693043c69665b941d80310599ae1317df889e2e66b03d852eb5747e0ee4",
+    "len": 55
+   },
+   "n_sites": 1,
+   "dims": 0,
+   "variants": 1,
+   "updates": []
+  },
+  {
+   "sel": "ee681f79",
+   "site": "CREATE2",
+   "pc": 3373,
+   "creator": null,
+   "salt": {
+    "form": "kec",
+    "segs": [
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cdat",
+       "add": 36,
+       "off_word": 4
+      },
+      "lo": 0,
+      "hi": 32
+     },
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cdat",
+       "add": 36,
+       "off_word": 36
+      },
+      "lo": 0,
+      "hi": 32
+     },
+     {
+      "kind": "val",
+      "val": {
+       "kind": "cdat",
+       "add": 36,
+       "off_word": 68
+      },
+      "lo": 0,
+      "hi": 32
+     }
+    ]
+   },
+   "init": {
+    "hash": "0x8425eb6e300dc98fe78488ed0d2539d0bc3089ebbe508342f09d97cbfb0b22de",
+    "len": 55
+   },
+   "n_sites": 1,
+   "dims": 0,
+   "variants": 1,
+   "updates": []
+  }
+ ],
+ "not_converted": [
+  {
+   "pc": 3373,
+   "site": "CREATE2",
+   "sel": "5ab18e2e",
+   "why": "val:('DYN', 'sha3')",
+   "n": 1
+  },
+  {
+   "pc": 3373,
+   "site": "CREATE2",
+   "sel": "6671c14f",
+   "why": "val:('DYN', 'sha3')",
+   "n": 1
+  },
+  {
+   "pc": 3373,
+   "site": "CREATE2",
+   "sel": "ee681f79",
+   "why": "val:('DYN', 'sha3')",
+   "n": 1
+  }
+ ]
+}

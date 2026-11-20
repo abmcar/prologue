@@ -1,0 +1,3 @@
+2026-11-14T21:07:47+08:00 fio on /data/node/home/data (vdb1), tier nvme
+qd1: iops 9501, mean latency 97.4 us, p99 136.2 us, bw 37 MiB/s
+qd32: iops 120117, mean latency 260.3 us, p99 346.1 us, bw 469 MiB/s

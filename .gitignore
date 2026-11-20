@@ -1,0 +1,5 @@
+/results/main/raw/
+/results/blockreads/recorded_10k_blocks.csv
+/paper/build/
+__pycache__/
+target/

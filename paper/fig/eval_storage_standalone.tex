@@ -1,0 +1,28 @@
+% figures_preamble.tex and macros.tex); \textwidth set to the template's 7in so the panel widths match.
+% (writes fig/eval_storage_standalone.pdf, which sec/9_eval.tex includes; rebuild it whenever the data or eval_storage.tex change).
+\documentclass[10pt]{article}
+\pagestyle{empty}
+\usepackage{mathptmx}
+\usepackage[T1]{fontenc}
+\usepackage{pslatex}
+\usepackage{xcolor}
+\usepackage{xspace}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usepgfplotslibrary{groupplots}
+\usepackage{pgfplotstable}
+\usepackage{listings}
+\usetikzlibrary{patterns}
+\input{figures_preamble}
+\input{macros}
+\input{fig/eap_style}
+
+\begin{document}
+% the page is the picture's own box plus a 2 pt border, no cropping tool needed
+\setlength{\textwidth}{7in}
+\setbox0\hbox{\input{fig/eval_storage}}
+\setbox0\hbox{\kern2pt\vbox{\kern2pt\hbox{\box0}\kern2pt}\kern2pt}
+\pagewidth=\wd0 \pageheight=\dimexpr\ht0+\dp0\relax
+\pdfvariable horigin=0pt \pdfvariable vorigin=0pt
+\shipout\vbox{\box0}
+\end{document}

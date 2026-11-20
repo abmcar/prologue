@@ -1,0 +1,87 @@
+% figures not yet redrawn still build). Input after figures_preamble and macros.
+%
+% TEXT. One face and one size in every figure: the text's sans-serif face (Helvetica, which pslatex scales by 0.9) at 9 pt
+% notes; panel titles in bold at the same size. One exception: the system's name on the frame of the runtime figure
+% (fig/overview.tex) is 9.3 pt bold, as that figure's title. Numbers are set in text mode, so figures carry no Times digits (pgfplots
+% puts tick labels in math mode, which is Times here) and no Computer Modern symbols; \eapx and \eapmu are Helvetica's
+% times sign and micro sign, scaled like the text. To switch every figure to the body's Times, change \eapfont only.
+%
+% COLOUR. One colour per configuration, the same in every figure (Okabe-Ito hues). dataviz validate_palette.js on white,
+% all 15 pairs of the six hues below (grey is the neutral and not tested): normal vision worst 15.6 (stock reth / stock
+% reth + reuse), colour-blind worst 7.6 (predict-al / dowse, which are also named beside their points); orange (2.25:1)
+% and sky blue (2.31:1) are below 3:1 on white and always come with a dark edge or a line style and a name. predict-al was
+%   Prologue                                  blue            #0072B2  solid line     diamond
+%   stock reth                                vermillion      #D55E00  dashed line    square
+%   stock reth + reuse                        orange          #E69F00  dotted line    triangle
+%   stock reth without prewarming             grey            black!55 dash-dot line  circle
+%   with only some of Prologue's parts        sky blue        #56B4E9  (ablation rows)
+%   predict-al                                bluish green    #009E73  (prediction comparison)
+%   dowse                                     reddish purple  #CC79A7  (prediction comparison)
+% In black-and-white print every configuration still differs by line style or marker shape and is named in the legend or
+% beside its marks. Each colour has four shades: D dark (edges), S saturated, M middle, L light (fills).
+% Kinds of time inside a bar: the bar's hue from dark to light (storage-slot wait S, account and code wait M, rest of
+% execution L), named once beside the first bar with leader lines.
+% Block classes: neutral grey, by marker shape.
+%
+% MARKS. Data lines 1.2 pt, drawn under the configuration to stress (Prologue), which is drawn last. Bars: fill with a 0.6 pt
+% edge in the hue's dark shade. Markers 4.6 pt with a 0.5 pt dark edge. Reference lines 0.6 pt dark grey, named in the
+% figure ("stock reth = 1").
+% AXES. Left and bottom only, 0.6 pt, ticks outward; grid: light dotted lines across the value axis only.
+% LEGEND. One row centred above the plot (above both panels of a two-panel figure), 10 pt between entries; the sample
+% carries the colour, the text stays black. Direct labels at the marks where they fit.
+% NUMBERS in the figure: values with their unit; ratios as 0.72x with the times sign, the stressed configuration's in bold.
+\newcommand\eapfont{\fontsize{9}{10.8}\selectfont\sffamily}
+\newcommand\eapx{\scalebox{0.9}{\texttimes}}
+\newcommand\eapmu{\scalebox{0.9}{\textmu}}
+% colours
+\definecolor{cReuse}{HTML}{E69F00}
+\definecolor{cPart}{HTML}{56B4E9}
+\colorlet{cNoPre}{black!55}
+\colorlet{cPlanD}{cPlan!70!black}\colorlet{cPlanS}{cPlan}\colorlet{cPlanM}{cPlan!55}\colorlet{cPlanL}{cPlan!22}
+\colorlet{cStockD}{cStock!70!black}\colorlet{cStockS}{cStock}\colorlet{cStockM}{cStock!55}\colorlet{cStockL}{cStock!22}
+\colorlet{cReuseD}{cReuse!60!black}\colorlet{cReuseS}{cReuse}\colorlet{cReuseM}{cReuse!55}\colorlet{cReuseL}{cReuse!22}
+\colorlet{cNoPreD}{black!75}\colorlet{cNoPreS}{black!55}\colorlet{cNoPreM}{black!32}\colorlet{cNoPreL}{black!12}
+\colorlet{cPartD}{cPart!55!black}\colorlet{cPartS}{cPart}\colorlet{cPartM}{cPart!55}\colorlet{cPartL}{cPart!22}
+\definecolor{cPredAl}{HTML}{009E73}
+\definecolor{cDowse}{HTML}{CC79A7}
+\colorlet{cPlanThr}{cPart}% old name (11-04), kept for figures not yet redrawn
+% configurations as lines and as markers (the marker shape repeats the colour for black-and-white print); the markers set
+% anchor=center, since a legend node's own anchor would otherwise reach the markers drawn inside its text
+\tikzset{
+  eap line plan/.style={cPlanS, line width=1.2pt, solid},
+  eap line stock/.style={cStockS, line width=1.2pt, dash pattern=on 3.6pt off 1.8pt},
+  eap line reuse/.style={cReuseS, line width=1.5pt, dash pattern=on 0.1pt off 2.3pt, line cap=round},
+  eap line nopre/.style={cNoPreS, line width=1.2pt, dash pattern=on 3.6pt off 1.5pt on 0.1pt off 1.5pt, line cap=round},
+  eap mark plan/.style={anchor=center, diamond, aspect=1, minimum size=5.6pt, inner sep=0pt, fill=cPlanS, draw=cPlanD, line width=0.5pt},
+  eap mark stock/.style={anchor=center, rectangle, minimum size=4.2pt, inner sep=0pt, fill=cStockS, draw=cStockD, line width=0.5pt},
+  eap mark reuse/.style={anchor=center, isosceles triangle, isosceles triangle apex angle=60, shape border rotate=90, minimum size=4.6pt,
+    inner sep=0pt, fill=cReuseS, draw=cReuseD, line width=0.5pt},
+  eap mark nopre/.style={anchor=center, circle, minimum size=4.6pt, inner sep=0pt, fill=cNoPreS, draw=cNoPreD, line width=0.5pt},
+  % text in the figure
+  eap value/.style={font=\eapfont, inner sep=1pt},
+  eap ratio/.style={font=\eapfont\bfseries, inner sep=1pt},
+  eap note/.style={font=\eapfont, text=black!65, inner sep=1pt},
+  eap legend/.style={font=\eapfont, inner sep=0pt},
+  eap ref/.style={black!65, line width=0.6pt},
+}
+% legend samples: a line (#1 style) 14 pt long, a box (#1 fill, #2 edge), a marker (#1 style) on a line (#2 style),
+% a marker alone (#1 style)
+\newcommand\eapKeyLine[1]{\tikz[baseline=-0.55ex]\draw[#1] (0,0) -- (14pt,0);}
+\newcommand\eapKeyBox[2]{\tikz[baseline=-0.55ex]\draw[fill=#1, draw=#2, line width=0.6pt] (0,-3pt) rectangle (7pt,3.4pt);}
+\newcommand\eapKeyMark[2]{\tikz[baseline=-0.55ex]{\draw[#2] (0,0) -- (16pt,0); \node[#1, anchor=center] at (8pt,0) {};}}
+\newcommand\eapKeyDot[1]{\tikz[baseline=-0.55ex]\node[#1, anchor=center] at (0,0) {};}
+\newcommand\eapKeySep{\hspace{10pt}}
+\pgfplotsset{
+  eap axis/.style={
+    axis lines*=left, axis line style={black!85, line width=0.6pt},
+    tick align=outside, tick pos=left, major tick length=3pt, minor tick length=1.8pt, tick style={black!85, line width=0.6pt},
+    ymajorgrids=true, xmajorgrids=false, grid style={black!25, densely dotted, line width=0.4pt},
+    label style={font=\eapfont}, tick label style={font=\eapfont},
+    title style={font=\eapfont\bfseries, text height=1.6ex, text depth=0.4ex, yshift=-0.5ex},
+    xlabel shift=-1pt, ylabel shift=-2pt,
+    scaled ticks=false, clip=false},
+  eap axis xgrid/.style={eap axis, xmajorgrids=true, ymajorgrids=false},
+  % tick labels of linear axes in the text font; log axes take explicit tick labels (xticklabels=...), which are text
+  eap linear x/.style={xticklabel={\pgfmathprintnumber[assume math mode=true]{\tick}}},
+  eap linear y/.style={yticklabel={\pgfmathprintnumber[assume math mode=true]{\tick}}},
+}

@@ -1,0 +1,10 @@
+#!/bin/bash
+# Prologue server, installed root-owned as /usr/local/sbin/prologue-rtprio by machine_setup.sh: the one command user
+# prologue may run with sudo. It raises RLIMIT_RTPRIO of one of prologue's own processes, exactly what the driver's
+# start_node.sh does with NODE_RTPRIO on the development host (`sudo -n prlimit --pid $$ --rtprio=N:N`), and nothing else:
+# no command is run, unlike prlimit, which would hand out a root shell.
+# usage: sudo -n /usr/local/sbin/prologue-rtprio PID N   (N: 1-49)
+set -eu
+[ $# -eq 2 ] && [[ "$1" =~ ^[1-9][0-9]*$ ]] && [[ "$2" =~ ^[1-9][0-9]?$ ]] && (( $2 <= 49 )) || { echo "usage: prologue-rtprio PID N (1-49)" >&2; exit 2; }
+[ "$(stat -c %U "/proc/$1")" = prologue ] || { echo "process $1 does not belong to prologue" >&2; exit 2; }
+exec /usr/bin/prlimit --pid "$1" --rtprio="$2:$2"

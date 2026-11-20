@@ -1,0 +1,11 @@
+measured blocks 2700; reuse modes {'2': 2700}
+totals {'blocks_without_ew_line': 2, 'checked': 0, 'fee_only': 507520, 'found': 610013, 'missing': 59109, 'queued': 663444, 'redo_runs': 149777, 'redo_skipped': 43585, 'redo_started': 149157, 'reused': 507736, 'stored': 746736, 'txs': 669122, 'valid': 507736}
+transactions per block 247.8
+found / txs 91.17%   valid / txs 75.88%
+reused / txs 75.88%   checked / txs 0.00%   (reused+checked) / txs 75.88%
+redo runs started / txs 22.29%   redo queued / txs 22.38%   stale not redone / txs 6.51%
+redo runs started / all pre-execution runs started 18.36%   first runs queued / txs 0.992   stored / txs 1.116
+per segment: k blocks reused/txs redo_started/txs
+  0 900 77.04% 19.75%
+  4 900 73.41% 27.39%
+  8 900 76.51% 21.16%

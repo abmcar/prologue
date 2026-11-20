@@ -1,0 +1,74 @@
+% Prediction figure: the prediction comparison as coverage against accuracy. One point per predictor (colour) and block class
+% (marker), with 95% intervals in both directions; predictor names beside their points; an arrow marks the better corner.
+% For each block class, the coverage that the reads whose locations bind at call start reach (an upper reference for any
+% predictor that evaluates locations exactly at call start): data/binding_dataflow.txt, scope miss_wr_ns, "call: start":
+% regular 81.296, batch-mint 98.141; all blocks weighted by the evaluated blocks' composition (8,950 / 1,050):
+% data/binding_dataflow_eval.txt, same scope and row: 89.371. Drawn at Prologue's accuracy for the class: a dotted line from
+% Prologue's point to a short vertical tick at the reference coverage, in ink (not a configuration).
+% colour-blind readers cannot tell from stock reth's vermillion); the legend keeps the block classes only, since the
+% predictors are named beside their points; block classes as in the per-block figure: regular blocks circle, batch-mint
+% blocks triangle, all blocks square (was circle).
+% Build: fig/eval_pred_standalone.tex with LuaLaTeX.
+\pgfplotstableread[col sep=comma]{data/m3_pred_scatter.csv}\psTab
+\def\psBindall{89.371}\def\psBindreg{81.296}\def\psBindmint{98.141}%
+\def\pscoldowse{cDowse}\def\pscolpredictal{cPredAl}\def\pscolsys{cPlan}\def\pscolsysthr{cPart}
+\tikzset{ps all/.style={rectangle, minimum size=4.6pt}, ps reg/.style={circle, minimum size=5.2pt},
+  ps mint/.style={regular polygon, regular polygon sides=3, minimum size=6.8pt}}
+\begin{tikzpicture}
+\begin{axis}[eap axis, eap linear x, eap linear y, scale only axis, width=181pt, height=118pt, set layers,
+  xmin=30, xmax=100, ymin=50, ymax=100, xtick={40,60,80,100}, ytick={50,60,70,80,90,100},
+  xlabel={Coverage of stock reth's slot wait (\%)}, ylabel={Accuracy (\%)}]
+\pgfplotstablegetrowsof{\psTab}\edef\psN{\pgfplotsretval}
+% reads that bind at call start: for each of Prologue's rows (pred = sys), a dotted line at its accuracy from its point to the
+% class's reference coverage; #1 0 draws the dotted lines, 1 the ticks, on the layer below the points, and each marker has a white
+% ring over the reference lines behind it (drawn before its own interval lines, which stay whole); the ticks are 0.7 pt
+% (were 0.9)
+\newcommand\psBind[1]{%
+  \pgfplotsforeachungrouped \psI in {1,...,\psN}{%
+    \pgfplotstablegetelem{\numexpr\psI-1\relax}{pred}\of\psTab\edef\psP{\pgfplotsretval}%
+    \def\psSys{sys}\ifx\psP\psSys
+      \pgfplotstablegetelem{\numexpr\psI-1\relax}{cls}\of\psTab\edef\psC{\pgfplotsretval}%
+      \pgfplotstablegetelem{\numexpr\psI-1\relax}{x}\of\psTab\edef\psX{\pgfplotsretval}%
+      \pgfplotstablegetelem{\numexpr\psI-1\relax}{y}\of\psTab\edef\psY{\pgfplotsretval}%
+      \edef\psB{\csname psBind\psC\endcsname}%
+      \ifnum#1=0
+        \edef\psTmp{\noexpand\draw[black!55, densely dotted, line width=0.8pt] (axis cs:\psX,\psY) -- (axis cs:\psB,\psY);}%
+      \else
+        \pgfmathsetmacro\psYl{\psY-2.2}\pgfmathsetmacro\psYh{\psY+2.2}%
+        \edef\psTmp{\noexpand\draw[black!80, line width=0.7pt] (axis cs:\psB,\psYl) -- (axis cs:\psB,\psYh);}%
+      \fi
+      \psTmp
+    \fi}}
+\begin{pgfonlayer}{pre main}\psBind{0}\psBind{1}\end{pgfonlayer}
+\pgfplotsforeachungrouped \psI in {1,...,\psN}{%
+  \pgfplotstablegetelem{\numexpr\psI-1\relax}{pred}\of\psTab\edef\psP{\pgfplotsretval}%
+  \pgfplotstablegetelem{\numexpr\psI-1\relax}{cls}\of\psTab\edef\psC{\pgfplotsretval}%
+  \pgfplotstablegetelem{\numexpr\psI-1\relax}{x}\of\psTab\edef\psX{\pgfplotsretval}%
+  \pgfplotstablegetelem{\numexpr\psI-1\relax}{xlo}\of\psTab\edef\psXl{\pgfplotsretval}%
+  \pgfplotstablegetelem{\numexpr\psI-1\relax}{xhi}\of\psTab\edef\psXh{\pgfplotsretval}%
+  \pgfplotstablegetelem{\numexpr\psI-1\relax}{y}\of\psTab\edef\psY{\pgfplotsretval}%
+  \pgfplotstablegetelem{\numexpr\psI-1\relax}{ylo}\of\psTab\edef\psYl{\pgfplotsretval}%
+  \pgfplotstablegetelem{\numexpr\psI-1\relax}{yhi}\of\psTab\edef\psYh{\pgfplotsretval}%
+  \edef\psCol{\csname pscol\psP\endcsname}%
+  \def\psSkip{systhr}\ifx\psP\psSkip\else
+  \edef\psTmp{%
+    \noexpand\node[ps \psC, anchor=center, inner sep=0pt, fill=white, draw=white, line width=2.2pt] at (axis cs:\psX,\psY) {};
+    \noexpand\draw[\psCol!80!black, line width=0.6pt] (axis cs:\psXl,\psY) -- (axis cs:\psXh,\psY) (axis cs:\psX,\psYl) -- (axis cs:\psX,\psYh);
+    \noexpand\node[ps \psC, anchor=center, inner sep=0pt, fill=\psCol, draw=\psCol!65!black, line width=0.6pt] at (axis cs:\psX,\psY) {};}%
+  \psTmp\fi}
+% names beside the points
+\node[eap ratio, anchor=north] at (axis cs:90.5,79.6) {\sys};
+\node[eap value, anchor=south] at (axis cs:43.2,74.8) {predict-al};
+\node[eap value, anchor=south west] at (axis cs:45.4,62.6) {dowse};
+% one label, centred above the regular blocks' tick (the clearest of the three)
+\node[eap note, anchor=south] at (axis cs:\psBindreg,86.6) {binds at call start};
+% the better corner
+\draw[-{Latex[length=1.6mm]}, black!60, line width=0.6pt] (axis cs:80,58) -- (axis cs:92,68);
+\node[eap note, anchor=north east] at (axis cs:81,58) {better};
+\end{axis}
+% legend above the plot: the block classes (the predictors are named beside their points)
+\node[eap legend, anchor=south] at ($(current axis.north west)!0.5!(current axis.north east) + (0,6pt)$)
+  {\eapKeyDot{ps all, fill=black!45, draw=black!75, line width=0.6pt, inner sep=0pt}\,All blocks\eapKeySep
+   \eapKeyDot{ps reg, fill=black!45, draw=black!75, line width=0.6pt, inner sep=0pt}\,Regular blocks\eapKeySep
+   \eapKeyDot{ps mint, fill=black!45, draw=black!75, line width=0.6pt, inner sep=0pt}\,Batch-mint blocks};
+\end{tikzpicture}

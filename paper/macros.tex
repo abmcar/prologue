@@ -1,0 +1,36 @@
+% System name: the submission must use a name not used in public (CFP, identity blinding). Change it here only.
+\newcommand{\sys}{Prologue\xspace}
+
+% Placeholders for results that are not yet accepted; remove all before submission.
+\newcommand{\todo}[1]{{\color{red}[TODO: #1]}}
+\newcommand{\tbd}{{\color{red}?}\xspace}
+
+% Units and notation
+\newcommand{\mgas}{Mgas\xspace}
+\newcommand{\ms}{\,ms\xspace}
+\newcommand{\us}{\,$\mu$s\xspace}
+\newcommand{\ci}[2]{\,{\scriptsize\color{black!60}(#1--#2)}}
+
+% Contribution colours, shared by every figure and table (figures_preamble.tex palette)
+\colorlet{cPlan}{bpOurs}
+\colorlet{cExtra}{bpData}
+\colorlet{cHeavy}{bpAccent}
+\colorlet{cImpl}{bpGray}
+\colorlet{cStock}{bpPrior}
+
+\lstset{basicstyle=\ttfamily\scriptsize, columns=fullflexible, keepspaces=true, showstringspaces=false,
+  frame=none, xleftmargin=0pt, aboveskip=2pt, belowskip=2pt}
+\usetikzlibrary{patterns}
+
+% Ragged-right paragraph column for text tables
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+
+% Capability marks for the related-work table: supplied, partial, not supplied
+\DeclareRobustCommand{\cyes}{\tikz[baseline=-0.1ex]\fill[black!78] (0,0) rectangle (1.7mm,1.7mm);}
+\DeclareRobustCommand{\cpart}{\tikz[baseline=-0.1ex]{\fill[black!78] (0,0) -- (1.7mm,0) -- (0,1.7mm) -- cycle; \draw[black!78, line width=0.4pt] (0,0) rectangle (1.7mm,1.7mm);}}
+\DeclareRobustCommand{\cno}{\tikz[baseline=-0.1ex]\draw[black!78, line width=0.4pt] (0,0) rectangle (1.7mm,1.7mm);}
+% Marks of the related-work table (tab:related): supplied, partial (half filled), not supplied.
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
+\DeclareRobustCommand{\pmark}{\tikz[baseline=-0.55ex]{\fill (0,-0.55ex) arc (-90:90:0.55ex) -- cycle; \draw[line width=0.4pt] (0,0) circle (0.55ex);}}

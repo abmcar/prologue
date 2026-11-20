@@ -1,0 +1,80 @@
+From 6eaf673f53a4ccb9e337d66eb699b1dd4ebc0c82 Mon Sep 17 00:00:00 2001
+From: Prologue authors <abmcar@users.noreply.github.com>
+Date: Sat, 14 Nov 2026 00:00:00 +0000
+Subject: [PATCH 1/2] jit: --jit.timeout for the out-of-process helper and
+ --jit.log-compilations
+
+Defaults are unchanged. Both the stock baseline and Prologue are built with this patch.
+---
+ crates/ethereum/node/src/node.rs |  6 ++++++
+ crates/node/core/src/args/jit.rs | 17 +++++++++++++++++
+ 2 files changed, 23 insertions(+)
+
+diff --git a/crates/ethereum/node/src/node.rs b/crates/ethereum/node/src/node.rs
+index 2850351295f4c8baf449067ff45f3515669c1f4a..a12c7329984eb473cc90115f0950c6198fc02e0f 100644
+--- a/crates/ethereum/node/src/node.rs
++++ b/crates/ethereum/node/src/node.rs
+@@ -509,6 +509,7 @@ fn jit_runtime_config(jit: &JitArgs) -> RuntimeConfig {
+         jit_worker_count: jit.worker_count.unwrap_or(default_tuning.jit_worker_count),
+         resident_code_cache_bytes: jit.code_cache_bytes,
+         idle_evict_duration: Some(jit.idle_evict_duration),
++        jit_timeout: jit.timeout,
+         ..default_tuning
+     };
+ 
+@@ -544,8 +545,13 @@ pub fn build_evm_config<C: EthereumHardforks>(
+ 
+     let jit_metrics = Arc::new(JitMetrics::default());
+     let compilation_metrics = jit_metrics.clone();
++    let log_compilations = jit.log_compilations;
+     config.on_compilation = Some(Arc::new(move |event| {
+         compilation_metrics.record_compilation(&event);
++        // Prologue (X-031, record only): every compilation, so runs can be compared process by process
++        if log_compilations {
++            tracing::info!(target: "reth::jit", code_hash = %event.code_hash, success = event.success, ms = event.duration.as_millis() as u64, "jit compiled");
++        }
+     }));
+ 
+     let tuning = config.tuning;
+diff --git a/crates/node/core/src/args/jit.rs b/crates/node/core/src/args/jit.rs
+index 251d4bcbf7ed61c2ea2bf8021c61173b86bd1827..00991d972a85c504d4556f56d8c3c6363cd8b84a 100644
+--- a/crates/node/core/src/args/jit.rs
++++ b/crates/node/core/src/args/jit.rs
+@@ -50,6 +50,20 @@ pub struct JitArgs {
+     )]
+     pub idle_evict_duration: Duration,
+ 
++    /// How long a compilation job may run in the out-of-process helper before the helper is discarded (Prologue X-031:
++    /// the default 5 s discards the helper on the largest contracts and fails the other jobs it held).
++    #[arg(
++        long = "jit.timeout",
++        default_value = humantime::format_duration(Self::DEFAULT_TIMEOUT).to_string(),
++        help_heading = "JIT",
++        value_parser = parse_duration,
++    )]
++    pub timeout: Duration,
++
++    /// Prologue (X-031, record only): log every compilation (code hash, success, duration) at info level.
++    #[arg(long = "jit.log-compilations", default_value_t = false, help_heading = "JIT")]
++    pub log_compilations: bool,
++
+     /// Enable compiler debug dumps.
+     ///
+     /// IR, assembly, and bytecode are written to `<datadir>/jit/<spec_id>/<code_hash>/` for each
+@@ -72,6 +86,7 @@ impl JitArgs {
+     const DEFAULT_MAX_BYTECODE_LEN: usize = 0;
+     const DEFAULT_CODE_CACHE_BYTES: usize = 1024 * 1024 * 1024; // 1 GiB
+     const DEFAULT_IDLE_EVICT_DURATION: Duration = Duration::from_hours(1);
++    const DEFAULT_TIMEOUT: Duration = Duration::from_secs(5);
+ }
+ 
+ impl Default for JitArgs {
+@@ -85,6 +100,8 @@ impl Default for JitArgs {
+             max_bytecode_len: Self::DEFAULT_MAX_BYTECODE_LEN,
+             code_cache_bytes: Self::DEFAULT_CODE_CACHE_BYTES,
+             idle_evict_duration: Self::DEFAULT_IDLE_EVICT_DURATION,
++            timeout: Self::DEFAULT_TIMEOUT,
++            log_compilations: false,
+             debug: false,
+             blocking: false,
+         }

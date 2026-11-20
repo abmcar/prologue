@@ -1,0 +1,12 @@
+10,000 blocks: n=10000 top 1000 (batch-mint 370), PN/UP 0.589, PN/UR 0.604; batch-mint share of all blocks 0.105
+the 2,700 blocks of f270_blockreads_blocks.csv: n=2700 top 270 (batch-mint 53), PN/UP 0.662, PN/UR 0.693; batch-mint share of all blocks 0.067
+segment 0: n=1000 top 100 (batch-mint 1), PN/UP 0.796, PN/UR 0.870; batch-mint share of all blocks 0.010
+segment 1: n=1000 top 100 (batch-mint 4), PN/UP 0.574, PN/UR 0.595; batch-mint share of all blocks 0.023
+segment 2: n=1000 top 100 (batch-mint 16), PN/UP 0.612, PN/UR 0.631; batch-mint share of all blocks 0.067
+segment 3: n=1000 top 100 (batch-mint 57), PN/UP 0.514, PN/UR 0.525; batch-mint share of all blocks 0.172
+segment 4: n=1000 top 100 (batch-mint 41), PN/UP 0.594, PN/UR 0.611; batch-mint share of all blocks 0.137
+segment 5: n=1000 top 100 (batch-mint 48), PN/UP 0.555, PN/UR 0.570; batch-mint share of all blocks 0.141
+segment 6: n=1000 top 100 (batch-mint 52), PN/UP 0.573, PN/UR 0.582; batch-mint share of all blocks 0.107
+segment 7: n=1000 top 100 (batch-mint 6), PN/UP 0.636, PN/UR 0.668; batch-mint share of all blocks 0.026
+segment 8: n=1000 top 100 (batch-mint 10), PN/UP 0.682, PN/UR 0.720; batch-mint share of all blocks 0.049
+segment 9: n=1000 top 100 (batch-mint 93), PN/UP 0.615, PN/UR 0.602; batch-mint share of all blocks 0.318

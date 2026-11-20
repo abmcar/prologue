@@ -1,0 +1,3 @@
+2026-11-15T01:08:58+08:00 fio on /data/node/home/data (vdb), tier pl0
+qd1: iops 1856, mean latency 535.7 us, p99 757.8 us, bw 7 MiB/s
+qd32: iops 10168, mean latency 3145.1 us, p99 8978.4 us, bw 40 MiB/s

@@ -1,0 +1,29 @@
+m3 x3 AB1ng
+
+== all: 10000 blocks, 2211420 transactions, 2293071 slot misses, wait 185465.6 ms
+(1) own prewarm not ended at execution start: 3.5% of transactions, 78.3% of misses, 78.1% of wait
+(2) running                   77.4% of misses   76.9% of wait
+(2) ended before the miss     22.3% of misses   22.4% of wait
+(2) not started or absent      0.3% of misses    0.7% of wait
+(3) own ended before the miss and nobody filled the slot in this block: 22.4% of all wait (99.9% of the ended-before wait)
+
+== general: 7475 blocks, 1679653 transactions, 596954 slot misses, wait 46304.4 ms
+(1) own prewarm not ended at execution start: 3.4% of transactions, 88.6% of misses, 88.9% of wait
+(2) running                   86.9% of misses   85.9% of wait
+(2) ended before the miss     12.3% of misses   12.0% of wait
+(2) not started or absent      0.8% of misses    2.1% of wait
+(3) own ended before the miss and nobody filled the slot in this block: 11.9% of all wait (99.6% of the ended-before wait)
+
+== mint: 2525 blocks, 531767 transactions, 1696117 slot misses, wait 139161.2 ms
+(1) own prewarm not ended at execution start: 3.7% of transactions, 74.6% of misses, 74.6% of wait
+(2) running                   74.1% of misses   73.9% of wait
+(2) ended before the miss     25.9% of misses   25.9% of wait
+(2) not started or absent      0.1% of misses    0.2% of wait
+(3) own ended before the miss and nobody filled the slot in this block: 25.9% of all wait (100.0% of the ended-before wait)
+
+== all, classes weighted 8950 : 1050 (evaluated blocks; lab run 7475 : 2525)
+(1) own prewarm not ended at execution start: 3.5% of transactions, 81.6% of wait
+(2) running                   79.8% of wait
+(2) ended before the miss     19.1% of wait
+(2) not started or absent      1.1% of wait
+(3) own ended before the miss and nobody filled the slot in this block: 19.1% of all wait

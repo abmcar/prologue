@@ -1,0 +1,659 @@
+From 8be3a33b4ed4bce9311bfd4562b8c878160dd03c Mon Sep 17 00:00:00 2001
+From: Prologue authors <abmcar@users.noreply.github.com>
+Date: Sat, 14 Nov 2026 00:00:00 +0000
+Subject: [PATCH] Hooks Prologue needs in evm2 and evm2-jit
+
+Inspector::allows_compiled_frames, Inspector::instruction_hooks, JitBackend::with_observation,
+set_keccak_hook, set_balance_hook; with tests.
+---
+ EAP_X027_TESTS.md                       |  16 ++
+ crates/evm2/src/evm/inspector.rs        |  30 ++++
+ crates/evm2/src/evm/mod.rs              |  31 +++-
+ crates/jit/builtins/src/lib.rs          |  95 +++++++++++-
+ crates/jit/runtime/src/evm2_evm.rs      | 196 ++++++++++++++++++++++++
+ crates/jit/runtime/src/runtime/mod.rs   |  34 +++-
+ crates/jit/runtime/src/runtime/stats.rs |  12 ++
+ crates/jit/runtime/src/runtime/tests.rs |  49 ++++++
+ 8 files changed, 460 insertions(+), 3 deletions(-)
+ create mode 100644 EAP_X027_TESTS.md
+
+diff --git a/EAP_X027_TESTS.md b/EAP_X027_TESTS.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..45e91fb1626831804c28c80bfd79f4180aa600f3
+--- /dev/null
++++ b/EAP_X027_TESTS.md
+@@ -0,0 +1,16 @@
++# X-027 test record for the EngineAccessPlan patches (branch eap-x290)
++
++Valid results are those at 6a4cd0f with this worktree's own target directory (reth/reth-2.9.0-eap/target),
++2026-11-02 13:4x, `scripts/x290_cargo.sh` under labq heavy:
++
++- `cargo test --release -p evm2 -p evm2-jit-builtins -p evm2-jit-runtime --features evm2-jit-runtime/llvm --lib`:
++  evm2 719/719, evm2-jit-builtins 7/7, evm2-jit-runtime 112/113; the failure is a JIT-memory accounting test
++  (jit_memory_tracks_compilation; eviction_frees_jit_memory in another run) that also fails on unpatched f93318f
++  in a parallel run and passes single-threaded on the patched tree.
++- Single-threaded: compiled_keccak_and_balance_reads_reach_thread_hooks, inspector_allowing_compiled_frames_keeps_message_hooks,
++  eviction_frees_jit_memory, jit_memory_tracks_compilation, unobserved_lookup_on_blocking_backend_does_not_compile,
++  unobserved_lookups_neither_count_nor_compile: 6/6 pass.
++
++Void: one run in which an unpatched f93318f worktree shared the target directory; cargo hashes path crates without
++their path, so that build overwrote the patched evm2 artifacts and the run compiled the patched tests against the
++unpatched evm2 (it failed to compile). Its result is not used.
+diff --git a/crates/evm2/src/evm/inspector.rs b/crates/evm2/src/evm/inspector.rs
+index 0e9e70b0dd95fff378806664238d76894ce9e15c..d667aba08129975b0fdc03a5a566c25956e5c3b1 100644
+--- a/crates/evm2/src/evm/inspector.rs
++++ b/crates/evm2/src/evm/inspector.rs
+@@ -12,6 +12,36 @@ use auto_impl::auto_impl;
+ /// EVM execution inspector.
+ #[auto_impl(&mut, Box)]
+ pub trait Inspector<T: EvmTypesHost>: NonStaticAny {
++    /// Whether frames may run through the interpreter runner (compiled code) while this inspector
++    /// is attached.
++    ///
++    /// Defaults to `false`: every frame runs through the interpreter so that [`step`](Self::step)
++    /// and [`step_end`](Self::step_end) see each instruction. An inspector that returns `true`
++    /// gives up the instruction hooks in frames the runner executes; the message hooks
++    /// ([`call`](Self::call), [`call_end`](Self::call_end), [`create`](Self::create),
++    /// [`create_end`](Self::create_end)) and [`log`](Self::log) still fire, because compiled code
++    /// sends nested messages and logs through the host. Frames the runner declines still run in
++    /// the interpreter with every hook. (EngineAccessPlan: the behaviour revmc had in reth 2.5.1.)
++    #[inline]
++    fn allows_compiled_frames(&self) -> bool {
++        false
++    }
++
++    /// Whether frames run in the interpreter call the instruction hooks.
++    ///
++    /// Defaults to `true`. An inspector that returns `false` only needs the message hooks
++    /// ([`call`](Self::call), [`call_end`](Self::call_end), [`create`](Self::create),
++    /// [`create_end`](Self::create_end)) and [`log`](Self::log): its frames run in the plain
++    /// interpreter, as without an inspector, and [`step`](Self::step),
++    /// [`step_end`](Self::step_end) and [`selfdestruct`](Self::selfdestruct) are not called.
++    /// The message hooks and `log` still fire, because they are sent through the host.
++    /// (EngineAccessPlan EXP-236: a call-start hook on the block executor that leaves the
++    /// interpreted frames as fast as without an inspector.)
++    #[inline]
++    fn instruction_hooks(&self) -> bool {
++        true
++    }
++
+     /// Called after a frame interpreter has been initialized.
+     #[inline]
+     fn initialize_interp(&mut self, interp: &mut Interpreter<'_, '_, T>) {
+diff --git a/crates/evm2/src/evm/mod.rs b/crates/evm2/src/evm/mod.rs
+index 6c4a60c34f24b419c5a35d6ae0fe2fd662b60f78..4c6a0a1d8bb1984f64d4ee79d8891f609345de6b 100644
+--- a/crates/evm2/src/evm/mod.rs
++++ b/crates/evm2/src/evm/mod.rs
+@@ -1694,7 +1694,16 @@ impl<'a, T: EvmTypes> Evm<'a, T> {
+             .replace(NonNull::from(&mut *interp_ref).cast::<Interpreter<'static, 'static, T>>());
+         let interpreter_runner = guard.evm.interpreter_runner.clone();
+         let stop = if let Some(inspector) = inspector {
+-            interp_ref.run_inspect(guard.evm, inspector)
++            if inspector.allows_compiled_frames()
++                && let Some(runner) = interpreter_runner
++                && let Some(stop) = runner.run(interp_ref, guard.evm)
++            {
++                interp_ref.finish_run(stop)
++            } else if inspector.instruction_hooks() {
++                interp_ref.run_inspect(guard.evm, inspector)
++            } else {
++                interp_ref.run(guard.evm)
++            }
+         } else if let Some(runner) = interpreter_runner
+             && let Some(stop) = runner.run(interp_ref, guard.evm)
+         {
+@@ -4623,10 +4632,12 @@ mod tests {
+     #[derive(Default)]
+     struct CallCounter {
+         calls: usize,
++        steps: usize,
+         panic_on_call: bool,
+         panic_on_step: bool,
+         probe_host: bool,
+         saw_inspector: bool,
++        no_instruction_hooks: bool,
+     }
+ 
+     impl Inspector<BaseEvmTypes> for CallCounter {
+@@ -4642,8 +4653,13 @@ mod tests {
+         }
+ 
+         fn step(&mut self, _interp: &mut Interpreter<'_, '_, BaseEvmTypes>) {
++            self.steps += 1;
+             assert!(!self.panic_on_step, "inspector panicked");
+         }
++
++        fn instruction_hooks(&self) -> bool {
++            !self.no_instruction_hooks
++        }
+     }
+ 
+     fn scoped_inspector_evm() -> Evm<'static, BaseEvmTypes> {
+@@ -4671,6 +4687,19 @@ mod tests {
+         )
+     }
+ 
++    #[test]
++    fn inspector_without_instruction_hooks_keeps_message_hooks() {
++        let mut evm = scoped_inspector_evm();
++        let mut stepping = CallCounter::default();
++        let _ = evm.transact_with_inspector(&test_tx(0), &mut stepping).unwrap().discard();
++        assert_eq!((stepping.calls, stepping.steps), (1, 1));
++
++        let mut calls_only =
++            CallCounter { panic_on_step: true, no_instruction_hooks: true, ..CallCounter::default() };
++        let _ = evm.transact_with_inspector(&test_tx(0), &mut calls_only).unwrap().discard();
++        assert_eq!((calls_only.calls, calls_only.steps), (1, 0));
++    }
++
+     #[test]
+     fn transact_with_inspector_reuses_borrowed_inspector() {
+         let mut evm = scoped_inspector_evm();
+diff --git a/crates/jit/builtins/src/lib.rs b/crates/jit/builtins/src/lib.rs
+index 5b3296ae7c1bb66ff82406f7ff0b473cc6368f0e..6880df3c479ea587c941012f83587a3ac7896d32 100644
+--- a/crates/jit/builtins/src/lib.rs
++++ b/crates/jit/builtins/src/lib.rs
+@@ -38,6 +38,88 @@ mod utils;
+ use utils::*;
+ pub use utils::{BuiltinError, BuiltinResult};
+ 
++#[cfg(feature = "std")]
++mod keccak_hook {
++    use core::{
++        cell::Cell,
++        sync::atomic::{AtomicBool, Ordering},
++    };
++
++    /// A callback that receives the input of every KECCAK256 that compiled code executes on the
++    /// thread it is set on.
++    pub type KeccakHook = fn(&[u8]);
++
++    /// Set once any thread installed a hook, so threads without one skip the thread-local lookup.
++    static ANY: AtomicBool = AtomicBool::new(false);
++
++    std::thread_local! {
++        static HOOK: Cell<Option<KeccakHook>> = const { Cell::new(None) };
++    }
++
++    /// Installs (`Some`) or removes (`None`) this thread's KECCAK256 input callback.
++    ///
++    /// Compiled code does not call an inspector's `step`, so an inspector that watches KECCAK256
++    /// inputs in the interpreter sees none in compiled frames; this callback is the compiled-code
++    /// counterpart. It is called with the hashed memory before the hash is computed, on the
++    /// executing thread. (EngineAccessPlan, ported from revmc-x233 4453f60.)
++    pub fn set_keccak_hook(hook: Option<KeccakHook>) {
++        if hook.is_some() {
++            ANY.store(true, Ordering::Relaxed);
++        }
++        HOOK.with(|h| h.set(hook));
++    }
++
++    #[inline]
++    pub(crate) fn call(data: &[u8]) {
++        if ANY.load(Ordering::Relaxed)
++            && let Some(hook) = HOOK.with(|h| h.get())
++        {
++            hook(data);
++        }
++    }
++}
++#[cfg(feature = "std")]
++pub use keccak_hook::{KeccakHook, set_keccak_hook};
++
++#[cfg(feature = "std")]
++mod balance_hook {
++    use alloy_primitives::Address;
++    use core::cell::Cell;
++
++    /// A callback that receives the address of every account whose balance compiled code reads on
++    /// the thread it is set on: BALANCE's operand, and the executing account for SELFBALANCE and
++    /// SELFDESTRUCT.
++    pub type BalanceHook = fn(Address);
++
++    std::thread_local! {
++        static HOOK: Cell<Option<BalanceHook>> = const { Cell::new(None) };
++    }
++
++    /// Installs (`Some`) or removes (`None`) this thread's balance-read callback.
++    ///
++    /// Compiled code does not call an inspector's `step`, so an inspector that records which
++    /// balances an execution observed sees no BALANCE or SELFBALANCE in compiled frames, and no
++    /// SELFDESTRUCT that fails after reading the balance (its gas depends on whether the contract
++    /// had value); this callback is the compiled-code counterpart. It is called on the executing
++    /// thread before the balance is read, so it also sees reads whose instruction then fails.
++    ///
++    /// Unlike the KECCAK256 callback there is no process-wide flag: a thread without a callback
++    /// pays one thread-local load per such instruction and touches no shared cache line.
++    /// (EngineAccessPlan, ported from revmc-x233 f3518f3.)
++    pub fn set_balance_hook(hook: Option<BalanceHook>) {
++        let _ = HOOK.try_with(|h| h.set(hook));
++    }
++
++    #[inline]
++    pub(crate) fn call(address: Address) {
++        if let Ok(Some(hook)) = HOOK.try_with(|h| h.get()) {
++            hook(address);
++        }
++    }
++}
++#[cfg(feature = "std")]
++pub use balance_hook::{BalanceHook, set_balance_hook};
++
+ /// The kind of a `*CALL*` instruction.
+ #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+ #[repr(u8)]
+@@ -181,7 +263,10 @@ fn do_keccak256<T: EvmTypesHost>(
+         ecx.gas.spend(ecx.gas_params().keccak256_word_cost(len))?;
+         let offset = word_to_usize(offset.to_u256())?;
+         ensure_memory(ecx, offset, len)?;
+-        keccak256(ecx.memory().slice(offset, len))
++        let data = ecx.memory().slice(offset, len);
++        #[cfg(feature = "std")]
++        keccak_hook::call(data);
++        keccak256(data)
+     });
+     Ok(())
+ }
+@@ -191,6 +276,8 @@ pub unsafe fn __revmc_builtin_balance<T: EvmTypesHost>(
+     ecx: &mut EvmContext<'_, '_, '_, T>,
+     address: &mut EvmWord,
+ ) -> BuiltinResult {
++    #[cfg(feature = "std")]
++    balance_hook::call(address.to_address());
+     let account = load_account(ecx, &address.to_address(), false)?;
+     *address = account.balance.into();
+     Ok(())
+@@ -363,6 +450,8 @@ pub unsafe fn __revmc_builtin_self_balance<T: EvmTypesHost>(
+     slot: &mut EvmWord,
+ ) -> BuiltinResult {
+     let destination = ecx.message().destination;
++    #[cfg(feature = "std")]
++    balance_hook::call(destination);
+     let balance = ecx
+         .host()
+         .load_account(&destination, false, false)
+@@ -987,6 +1076,10 @@ pub unsafe fn __revmc_builtin_selfdestruct<T: EvmTypesHost>(
+     let skip_cold_load = ecx.gas.remaining() < cold_load_gas;
+     let address = &ecx.message().destination;
+     let target = target.to_address();
++    // the host reads the contract's balance (moved to the target; whether it had value decides the
++    // new-account gas below)
++    #[cfg(feature = "std")]
++    balance_hook::call(*address);
+     let res = ecx
+         .host()
+         .selfdestruct(address, &target, skip_cold_load)
+diff --git a/crates/jit/runtime/src/evm2_evm.rs b/crates/jit/runtime/src/evm2_evm.rs
+index 69e704bbd67f81e953a338f81ba4ef0abb4580f4..e5bc413dbe029e5c7a31ff1131b5df5cc4612fa4 100644
+--- a/crates/jit/runtime/src/evm2_evm.rs
++++ b/crates/jit/runtime/src/evm2_evm.rs
+@@ -252,6 +252,202 @@ mod tests {
+         ]
+     }
+ 
++    // EngineAccessPlan: an inspector that allows compiled frames keeps its message hooks while
++    // compiled code runs; one that does not (the default) forces the interpreter.
++    #[cfg(feature = "llvm")]
++    #[derive(Default)]
++    struct CountingInspector {
++        allow: bool,
++        calls: Vec<(Address, u16)>,
++        call_ends: usize,
++        steps: usize,
++    }
++
++    #[cfg(feature = "llvm")]
++    impl evm2::Inspector<BaseEvmTypes> for CountingInspector {
++        fn allows_compiled_frames(&self) -> bool {
++            self.allow
++        }
++        fn step(&mut self, _interp: &mut Interpreter<'_, '_, BaseEvmTypes>) {
++            self.steps += 1;
++        }
++        fn call(
++            &mut self,
++            _interp: &mut Interpreter<'_, '_, BaseEvmTypes>,
++            message: &mut evm2::interpreter::Message<BaseEvmTypes>,
++        ) -> Option<evm2::interpreter::MessageResult<BaseEvmTypes>> {
++            self.calls.push((message.destination, message.depth));
++            None
++        }
++        fn call_end(
++            &mut self,
++            _interp: &mut Interpreter<'_, '_, BaseEvmTypes>,
++            _message: &evm2::interpreter::Message<BaseEvmTypes>,
++            _result: &mut evm2::interpreter::MessageResult<BaseEvmTypes>,
++        ) {
++            self.call_ends += 1;
++        }
++    }
++
++    /// Runs a top-level call from `caller` (whose code CALLs `target`, which returns 0x42)
++    /// through `Host::execute_message` with `inspector` attached and a blocking JIT runner.
++    #[cfg(feature = "llvm")]
++    fn run_inspected_call(inspector: CountingInspector) -> (CountingInspector, Bytes, u64, u64) {
++        let target = Address::from([0x22; 20]);
++        let caller = Address::from([0x11; 20]);
++        let mut code = vec![op::PUSH1, 0x69, op::PUSH0, op::MSTORE];
++        code.extend([op::PUSH1, 0x20, op::PUSH0, op::PUSH0, op::PUSH0, op::PUSH0]);
++        push20(&mut code, target);
++        code.extend([
++            op::PUSH2, 0x27, 0x10, op::CALL, op::PUSH0, op::MLOAD, op::PUSH0, op::MSTORE,
++            op::PUSH1, 0x20, op::PUSH0, op::RETURN,
++        ]);
++        let mut database = InMemoryDB::default();
++        database.insert_account_info(
++            &caller,
++            AccountInfo::default().with_code(Bytecode::new_legacy(code.clone().into())),
++        );
++        database.insert_account_info(
++            &target,
++            AccountInfo::default()
++                .with_code(Bytecode::new_legacy(Bytes::copy_from_slice(BYTECODE_RET42))),
++        );
++        let backend = blocking_backend();
++        let mut host = Evm::<BaseEvmTypes>::new(
++            SpecId::CANCUN,
++            BlockEnvExt::default(),
++            ethereum_tx_registry(SpecId::CANCUN),
++            database,
++            Precompiles::base(SpecId::CANCUN),
++        );
++        host.set_interpreter_runner(JitInterpreterRunner::new(backend.clone()));
++        host.set_inspector(inspector);
++        let tx_env = TxEnvExt::default();
++        let mut message = MessageExt {
++            gas_limit: 1_000_000,
++            destination: caller,
++            code_address: caller,
++            code: Bytecode::new_legacy(code.into()),
++            ..MessageExt::default()
++        };
++        let result = Host::execute_message(&mut host, &tx_env, &mut message).unwrap();
++        assert_eq!(result.stop, InstrStop::Return);
++        let output = Bytes::copy_from_slice(&result.output);
++        let gas = result.gas.spent();
++        let compiled = backend.stats().compilations_succeeded;
++        let inspector = host.clear_inspector_as::<CountingInspector>().unwrap();
++        (*inspector, output, gas, compiled)
++    }
++
++    #[test]
++    #[cfg(feature = "llvm")]
++    fn inspector_allowing_compiled_frames_keeps_message_hooks() {
++        let (compiled, out_c, gas_c, n_c) =
++            run_inspected_call(CountingInspector { allow: true, ..Default::default() });
++        let (interp, out_i, gas_i, n_i) = run_inspected_call(CountingInspector::default());
++        // Same result either way.
++        assert_eq!(out_c, out_i);
++        assert_eq!(out_c[31], 0x42);
++        assert_eq!(gas_c, gas_i);
++        // Both inspectors see the top-level and the nested call, with their ends.
++        let target = Address::from([0x22; 20]);
++        assert_eq!(compiled.calls.len(), 2);
++        assert_eq!(compiled.calls, interp.calls);
++        assert_eq!(compiled.calls[1].0, target);
++        assert_eq!(compiled.call_ends, 2);
++        assert_eq!(interp.call_ends, 2);
++        // Compiled frames call no step hook; the default inspector forced the interpreter.
++        assert!(n_c >= 2, "both frames compiled, got {n_c}");
++        assert_eq!(compiled.steps, 0);
++        assert_eq!(n_i, 0, "the default inspector never reaches the runner");
++        assert!(interp.steps > 0);
++    }
++
++    // EngineAccessPlan (ported from revmc-x233 4453f60 / f3518f3): the KECCAK256 input and
++    // balance-read callbacks of compiled code.
++    #[cfg(feature = "llvm")]
++    std::thread_local! {
++        static KEC_SEEN: std::cell::RefCell<Vec<Vec<u8>>> = const { std::cell::RefCell::new(Vec::new()) };
++        static BAL_SEEN: std::cell::RefCell<Vec<Address>> = const { std::cell::RefCell::new(Vec::new()) };
++    }
++
++    #[cfg(feature = "llvm")]
++    fn kec_hook(data: &[u8]) {
++        KEC_SEEN.with(|v| v.borrow_mut().push(data.to_vec()));
++    }
++
++    #[cfg(feature = "llvm")]
++    fn bal_hook(address: Address) {
++        BAL_SEEN.with(|v| v.borrow_mut().push(address));
++    }
++
++    #[test]
++    #[cfg(feature = "llvm")]
++    fn compiled_keccak_and_balance_reads_reach_thread_hooks() {
++        use evm2_jit_builtins::{set_balance_hook, set_keccak_hook};
++        let me = Address::from([0x11; 20]);
++        let other = Address::from([0x33; 20]);
++        let heir = Address::from([0x44; 20]);
++        // MSTORE8 0xab at 0; KECCAK256(0, 1); BALANCE(other); SELFBALANCE; SELFDESTRUCT(heir)
++        let mut code = vec![op::PUSH1, 0xab, op::PUSH0, op::MSTORE8];
++        code.extend([op::PUSH1, 1, op::PUSH0, op::KECCAK256, op::POP]);
++        push20(&mut code, other);
++        code.extend([op::BALANCE, op::POP, op::SELFBALANCE, op::POP]);
++        push20(&mut code, heir);
++        code.push(op::SELFDESTRUCT);
++        let run = |with_jit: bool| {
++            let mut database = InMemoryDB::default();
++            database.insert_account_info(&me, AccountInfo::default().with_balance(Word::from(7)));
++            database.insert_account_info(&other, AccountInfo::default());
++            let backend = blocking_backend();
++            let mut host = Evm::<BaseEvmTypes>::new(
++                SpecId::CANCUN,
++                BlockEnvExt::default(),
++                ethereum_tx_registry(SpecId::CANCUN),
++                database,
++                Precompiles::base(SpecId::CANCUN),
++            );
++            let tx_env = TxEnvExt::default();
++            let message = MessageExt {
++                gas_limit: 1_000_000,
++                destination: me,
++                code_address: me,
++                code: Bytecode::new_legacy(code.clone().into()),
++                ..MessageExt::default()
++            };
++            let mut interpreter = Interpreter::<BaseEvmTypes>::new(&tx_env, &message);
++            if with_jit {
++                run_interpreter(&backend, &mut interpreter, &mut host).unwrap()
++            } else {
++                interpreter.run(&mut host).unwrap()
++            }
++        };
++        set_keccak_hook(Some(kec_hook));
++        set_balance_hook(Some(bal_hook));
++        // The interpreter does not call the hooks (it has the inspector's step for that).
++        assert_eq!(run(false), InstrStop::SelfDestruct);
++        assert!(KEC_SEEN.with(|v| v.borrow().is_empty()));
++        assert!(BAL_SEEN.with(|v| v.borrow().is_empty()));
++        assert_eq!(run(true), InstrStop::SelfDestruct);
++        assert_eq!(KEC_SEEN.with(|v| v.take()), vec![vec![0xab]]);
++        assert_eq!(BAL_SEEN.with(|v| v.take()), vec![other, me, me]);
++        // Removed hooks are not called.
++        set_keccak_hook(None);
++        set_balance_hook(None);
++        assert_eq!(run(true), InstrStop::SelfDestruct);
++        assert!(KEC_SEEN.with(|v| v.borrow().is_empty()));
++        assert!(BAL_SEEN.with(|v| v.borrow().is_empty()));
++        // Another thread without hooks is unaffected by this thread's.
++        set_keccak_hook(Some(kec_hook));
++        std::thread::scope(|s| {
++            s.spawn(|| {
++                assert_eq!(run(true), InstrStop::SelfDestruct);
++                assert!(KEC_SEEN.with(|v| v.borrow().is_empty()));
++            });
++        });
++        set_keccak_hook(None);
++    }
++
+     #[test]
+     fn disabled_backend_falls_back_to_interpreter() {
+         let tx_env = TxEnvExt::default();
+diff --git a/crates/jit/runtime/src/runtime/mod.rs b/crates/jit/runtime/src/runtime/mod.rs
+index 06f4c290ae395ec81ed0f05c4024915cef2cb4e8..031952a2ebebb7a8f7864b3365dcd042244d1c07 100644
+--- a/crates/jit/runtime/src/runtime/mod.rs
++++ b/crates/jit/runtime/src/runtime/mod.rs
+@@ -152,6 +152,9 @@ struct BackendThread {
+ #[derive(Clone, Debug)]
+ pub struct JitBackend {
+     inner: Arc<BackendInner>,
++    /// Whether this handle's lookups enqueue lookup-observed events (see
++    /// [`with_observation`](Self::with_observation)).
++    observe: bool,
+ }
+ 
+ impl JitBackend {
+@@ -205,6 +208,7 @@ impl JitBackend {
+             stats: Arc::new(RuntimeStats::default()),
+         });
+         let this = Self {
++            observe: true,
+             inner: Arc::new(BackendInner {
+                 shared,
+                 enabled: AtomicBool::new(false),
+@@ -279,7 +283,7 @@ impl JitBackend {
+             cold_path();
+             return LookupDecision::Unavailable(LookupMissReason::Disabled);
+         }
+-        if inner.blocking {
++        if inner.blocking && self.observe {
+             cold_path();
+             return self.lookup_blocking(req);
+         }
+@@ -297,6 +301,15 @@ impl JitBackend {
+             LookupDecision::Unavailable(LookupMissReason::NotReady)
+         };
+ 
++        if !self.observe {
++            let counter = match decision {
++                LookupDecision::Compiled(_) => &shared.stats.unobserved_hits,
++                LookupDecision::Unavailable(_) => &shared.stats.unobserved_misses,
++            };
++            counter.fetch_add(1, Ordering::Relaxed);
++            return decision;
++        }
++
+         if let Err(_v) = shared.events.push(req) {
+             cold_path();
+             shared.stats.events_dropped.fetch_add(1, Ordering::Relaxed);
+@@ -305,6 +318,25 @@ impl JitBackend {
+         decision
+     }
+ 
++    /// Returns a handle on the same backend whose [`lookup`](Self::lookup)s enqueue lookup-observed
++    /// events (`true`, the default) or not (`false`).
++    ///
++    /// Without events a lookup only reads the resident map: it does not count towards hotness, so it
++    /// never triggers a compilation, and a hit does not refresh the entry's last-hit time. It never
++    /// blocks, even in [`blocking`](RuntimeConfig::blocking) mode. Its hits and misses are counted
++    /// in [`unobserved_hits`](RuntimeStatsSnapshot::unobserved_hits) and
++    /// [`unobserved_misses`](RuntimeStatsSnapshot::unobserved_misses) instead of the lookup stats.
++    /// Useful for speculative executions that should run compiled code without changing which
++    /// code gets compiled. (EngineAccessPlan, ported from revmc-x233 491378d.)
++    pub fn with_observation(&self, observe: bool) -> Self {
++        Self { inner: Arc::clone(&self.inner), observe }
++    }
++
++    /// Returns whether this handle's lookups enqueue lookup-observed events.
++    pub const fn observes(&self) -> bool {
++        self.observe
++    }
++
+     /// Checks the resident map for a compiled program without enqueuing an event.
+     pub fn get_compiled(&self, code_hash: B256, spec_id: SpecId) -> Option<Arc<CompiledProgram>> {
+         let key = RuntimeCacheKey { code_hash, spec_id };
+diff --git a/crates/jit/runtime/src/runtime/stats.rs b/crates/jit/runtime/src/runtime/stats.rs
+index ebfaa0d8b898828a603c21158047def8517ecd7a..c5c69215550fbf485484f481974a95abd373fb0e 100644
+--- a/crates/jit/runtime/src/runtime/stats.rs
++++ b/crates/jit/runtime/src/runtime/stats.rs
+@@ -9,6 +9,10 @@ pub(crate) struct RuntimeStats {
+     pub(crate) lookup_hits: AtomicU64,
+     /// Total lookups that returned interpret (not ready).
+     pub(crate) lookup_misses: AtomicU64,
++    /// Total lookups without a lookup-observed event that returned a compiled function.
++    pub(crate) unobserved_hits: AtomicU64,
++    /// Total lookups without a lookup-observed event that returned interpret (not ready).
++    pub(crate) unobserved_misses: AtomicU64,
+     /// Total lookup events dropped due to event-queue overflow.
+     pub(crate) events_dropped: AtomicU64,
+     /// Total control commands dropped because the command channel was full.
+@@ -60,6 +64,12 @@ pub struct RuntimeStatsSnapshot {
+     pub lookup_hits: u64,
+     /// Total lookups that returned interpret (not ready).
+     pub lookup_misses: u64,
++    /// Total lookups without a lookup-observed event (see
++    /// [`JitBackend::with_observation`](crate::runtime::JitBackend::with_observation)) that returned
++    /// a compiled function.
++    pub unobserved_hits: u64,
++    /// Total lookups without a lookup-observed event that returned interpret (not ready).
++    pub unobserved_misses: u64,
+     /// Total lookup events dropped due to event-queue overflow.
+     pub events_dropped: u64,
+     /// Total control commands dropped because the command channel was full.
+@@ -141,6 +151,8 @@ impl RuntimeStats {
+         RuntimeStatsSnapshot {
+             lookup_hits: self.lookup_hits.load(Ordering::Relaxed),
+             lookup_misses: self.lookup_misses.load(Ordering::Relaxed),
++            unobserved_hits: self.unobserved_hits.load(Ordering::Relaxed),
++            unobserved_misses: self.unobserved_misses.load(Ordering::Relaxed),
+             events_dropped: self.events_dropped.load(Ordering::Relaxed),
+             commands_dropped: self.commands_dropped.load(Ordering::Relaxed),
+             resident_entries: gauges.resident_entries,
+diff --git a/crates/jit/runtime/src/runtime/tests.rs b/crates/jit/runtime/src/runtime/tests.rs
+index c8f1f314b98a30c56af657e911aaef7b873c6d50..9f49aef5195a9bc7b56a328741a955516087fa1e 100644
+--- a/crates/jit/runtime/src/runtime/tests.rs
++++ b/crates/jit/runtime/src/runtime/tests.rs
+@@ -1839,3 +1839,52 @@ fn shutdown_propagates_worker_error() {
+     assert!(error.to_string().contains("controlled compile worker failure"));
+     assert!(backend.inner.thread.lock().unwrap().is_none());
+ }
++
++// EngineAccessPlan (ported from revmc-x233 491378d): lookups through a non-observing handle.
++#[test]
++#[cfg(feature = "llvm")]
++fn unobserved_lookups_neither_count_nor_compile() {
++    let tb =
++        TestBackend::with_tuning_1w(RuntimeTuning { jit_hot_threshold: 1, ..Default::default() });
++    let unobserved = tb.with_observation(false);
++    assert!(tb.observes());
++    assert!(!unobserved.observes());
++
++    // Past the hot threshold many times over: no event, so nothing is counted or compiled.
++    for _ in 0..10 {
++        assert!(matches!(
++            unobserved.lookup(TestBackend::req_cancun(BYTECODE_RET42)),
++            LookupDecision::Unavailable(LookupMissReason::NotReady)
++        ));
++    }
++    std::thread::sleep(std::time::Duration::from_millis(200));
++    let stats = tb.stats();
++    assert_eq!((stats.lookup_hits, stats.lookup_misses), (0, 0));
++    assert_eq!(stats.compilations_dispatched, 0);
++    assert_eq!(stats.resident_entries, 0);
++    assert_eq!((stats.unobserved_hits, stats.unobserved_misses), (0, 10));
++
++    // Compiled through the observing handle, the unobserved one runs it.
++    tb.trigger_jit_cancun(BYTECODE_RET42);
++    assert!(matches!(
++        unobserved.lookup(TestBackend::req_cancun(BYTECODE_RET42)),
++        LookupDecision::Compiled(_)
++    ));
++    assert_eq!(tb.stats().unobserved_hits, 1);
++    assert!(unobserved.with_observation(true).observes());
++}
++
++// A non-observing handle of a blocking backend never blocks (and so never compiles).
++#[test]
++fn unobserved_lookup_on_blocking_backend_does_not_compile() {
++    let backend =
++        JitBackend::new(RuntimeConfig { enabled: true, blocking: true, ..RuntimeConfig::default() })
++            .unwrap();
++    let unobserved = backend.with_observation(false);
++    assert!(matches!(
++        unobserved.lookup(TestBackend::req_cancun(BYTECODE_RET42)),
++        LookupDecision::Unavailable(LookupMissReason::NotReady)
++    ));
++    assert_eq!(backend.stats().compilations_dispatched, 0);
++    assert_eq!(backend.stats().unobserved_misses, 1);
++}

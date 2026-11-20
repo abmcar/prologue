@@ -1,0 +1,33 @@
+cmp270: segment 6, 1000 blocks under all of ['UP16', 'PN16', 'UP32', 'PN32', 'UP64', 'PN64', 'UPf', 'PNf'] (regular 893, batch-mint 107); stalled blocks (outside execution > 250 ms in any process) 0
+  UP16: newPayload 36.50 ms, execution 33.04 ms per block; its own stalled blocks 0
+  PN16: newPayload 26.48 ms, execution 21.36 ms per block; its own stalled blocks 0
+  UP32: newPayload 34.94 ms, execution 31.44 ms per block; its own stalled blocks 0
+  PN32: newPayload 24.76 ms, execution 19.91 ms per block; its own stalled blocks 0
+  UP64: newPayload 34.86 ms, execution 31.37 ms per block; its own stalled blocks 0
+  PN64: newPayload 24.90 ms, execution 19.96 ms per block; its own stalled blocks 0
+  UPf: newPayload 34.72 ms, execution 31.24 ms per block; its own stalled blocks 0
+  PNf: newPayload 24.67 ms, execution 19.80 ms per block; its own stalled blocks 0
+[ratio] PN16/UP16 (all): newPayload 0.725 (0.685-0.765); execution 0.647 (0.605-0.686); slowest 5% 0.376 (0.317-0.458); regular 0.867 (0.849-0.884); batch-mint 0.413 (0.363-0.473)
+[ratio] PN16/UP16 (without stalled): newPayload 0.725 (0.685-0.765); execution 0.647 (0.605-0.686); slowest 5% 0.376 (0.317-0.458); regular 0.867 (0.849-0.884); batch-mint 0.413 (0.363-0.473)
+[ratio] PN32/UP32 (all): newPayload 0.709 (0.671-0.745); execution 0.633 (0.595-0.670); slowest 5% 0.355 (0.302-0.428); regular 0.838 (0.824-0.853); batch-mint 0.404 (0.355-0.462)
+[ratio] PN32/UP32 (without stalled): newPayload 0.709 (0.671-0.745); execution 0.633 (0.595-0.670); slowest 5% 0.355 (0.302-0.428); regular 0.838 (0.824-0.853); batch-mint 0.404 (0.355-0.462)
+[ratio] PN64/UP64 (all): newPayload 0.714 (0.676-0.750); execution 0.636 (0.598-0.673); slowest 5% 0.374 (0.312-0.455); regular 0.846 (0.830-0.861); batch-mint 0.405 (0.356-0.463)
+[ratio] PN64/UP64 (without stalled): newPayload 0.714 (0.676-0.750); execution 0.636 (0.598-0.673); slowest 5% 0.374 (0.312-0.455); regular 0.846 (0.830-0.861); batch-mint 0.405 (0.356-0.463)
+[diff] (PN16/UP16) - (PN32/UP32) (all): +0.017 (+0.011 to +0.023) -> wholly above 0
+[diff] (PN16/UP16) - (PN32/UP32) (without stalled): +0.017 (+0.011 to +0.023) -> wholly above 0
+[diff] (PN64/UP64) - (PN32/UP32) (all): +0.005 (+0.002 to +0.009) -> wholly above 0
+[diff] (PN64/UP64) - (PN32/UP32) (without stalled): +0.005 (+0.002 to +0.009) -> wholly above 0
+[diff] (PN32/UP32) - (PNf/UPf) (all): -0.002 (-0.005 to +0.002) -> not resolved
+[diff] (PN32/UP32) - (PNf/UPf) (without stalled): -0.002 (-0.005 to +0.002) -> not resolved
+[dev] UP16: 2014 reads per block, 55186 per s, 0.080 ms per read, reads in flight while busy 6.5 (approximate)
+[dev] PN16: 2463 reads per block, 93012 per s, 0.080 ms per read, reads in flight while busy 9.2 (approximate)
+[dev] UP32: 1621 reads per block, 46387 per s, 0.079 ms per read, reads in flight while busy 5.7 (approximate)
+[dev] PN32: 1632 reads per block, 65922 per s, 0.078 ms per read, reads in flight while busy 7.0 (approximate)
+[dev] UP64: 1621 reads per block, 46486 per s, 0.079 ms per read, reads in flight while busy 5.8 (approximate)
+[dev] PN64: 1633 reads per block, 65586 per s, 0.078 ms per read, reads in flight while busy 6.9 (approximate)
+[mem] UP16: page cache before 0.00 GiB, anon 0.00 GiB; after: max None, oom_kill None, file 0.00 GiB; proc read MB per block 8.32, major faults per block 2083
+[mem] PN16: page cache before 0.00 GiB, anon 0.00 GiB; after: max None, oom_kill None, file 0.00 GiB; proc read MB per block 10.73, major faults per block 2500
+[mem] UP32: page cache before 0.00 GiB, anon 0.00 GiB; after: max None, oom_kill None, file 0.00 GiB; proc read MB per block 6.69, major faults per block 1681
+[mem] PN32: page cache before 0.00 GiB, anon 0.00 GiB; after: max None, oom_kill None, file 0.00 GiB; proc read MB per block 6.74, major faults per block 1653
+[mem] UP64: page cache before 0.00 GiB, anon 0.00 GiB; after: max None, oom_kill None, file 0.00 GiB; proc read MB per block 6.69, major faults per block 1681
+[mem] PN64: page cache before 0.00 GiB, anon 0.00 GiB; after: max None, oom_kill None, file 0.00 GiB; proc read MB per block 6.74, major faults per block 1654

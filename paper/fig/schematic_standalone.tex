@@ -1,0 +1,24 @@
+% One of the TikZ diagrams (binding, plan, overview, prewarm_late) compiled on its own:
+%   lualatex -jobname=<name> "\def\figname{<name>}\input{fig/schematic_standalone}"     (from paper/)
+\documentclass[10pt]{article}
+\pagestyle{empty}
+\usepackage{mathptmx}
+\usepackage[T1]{fontenc}
+\usepackage{pslatex}
+\usepackage{xcolor}
+\usepackage{xspace}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\usepackage{pgfplotstable}
+\usepackage{listings}
+\input{figures_preamble}
+\input{macros}
+\input{fig/eap_style}
+\begin{document}
+\setlength{\textwidth}{7in}\setlength{\columnwidth}{3.33in}\setlength{\linewidth}{3.33in}
+\setbox0\hbox{\input{fig/\figname}}
+\setbox0\hbox{\kern2pt\vbox{\kern2pt\hbox{\box0}\kern2pt}\kern2pt}
+\pagewidth=\wd0 \pageheight=\dimexpr\ht0+\dp0\relax
+\pdfvariable horigin=0pt \pdfvariable vorigin=0pt
+\shipout\vbox{\box0}
+\end{document}
