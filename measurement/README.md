@@ -1,8 +1,9 @@
 # Measurement scripts
 
 These are the scripts as they ran on the measurement servers. They assume the layout of those servers, and their
-comments carry labels of the form `EXP-nnn` and `X-nnn`, which refer to the authors' development log; several checks
-in `run/pre257.sh` look for such labels in the driver, so they are left in place.
+comments carry labels of the form `EXP-nnn` and `X-nnn`. These are markers left from development and refer to our
+development log; some of them stand on lines that the checks before a run look for in the driver (`run/pre257.sh`),
+so all of them are left in place.
 
 | Directory | Contents |
 |---|---|
